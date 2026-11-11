@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nozzle and Beam — Custom 3D Prints, Made to Order</title>
+  <meta name="description" content="Custom 3D printed keychains, name signs, fidgets, dice, desk gear and more. Upload your own files for custom prints. Laser cutting and the Vike robotics kit coming soon." />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <a class="skip" href="#shop">Skip to shop</a>
+
+  <header class="topbar">
+    <a href="/" class="brand" aria-label="Nozzle and Beam home">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M12 4h16v8l-5 7h-6l-5-7z" fill="var(--ink)"/><path d="M18 19h4l-2 5z" fill="var(--orange)"/><rect x="6" y="30" width="28" height="3" rx="1.5" fill="var(--orange)"/><rect x="10" y="26" width="20" height="3" rx="1.5" fill="var(--teal)"/><rect x="14" y="34" width="12" height="3" rx="1.5" fill="var(--mustard)"/></svg>
+      <span>Nozzle and Beam</span>
+    </a>
+    <nav class="nav">
+      <a href="#shop">Shop</a>
+      <a href="#custom">Send a file</a>
+      <a href="/canopy-scan.html">Canopy Scan</a>
+      <a href="#next">Coming soon</a>
+    </nav>
+    <button class="cart-btn" id="cartOpen" aria-label="Open cart">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.4 11h11l2-8H6.3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="19.5" r="1.5"/><circle cx="17" cy="19.5" r="1.5"/></svg>
+      <span>Cart</span>
+      <b id="cartCount">0</b>
+    </button>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="kicker">Small-batch 3D printing · made to order</p>
+        <h1>Tiny things,<br/>printed <span class="hl">your way</span>.</h1>
+        <p class="lede">Keychains with your name on them. Dice in your colors. A sign for the bedroom door. Pick something from the shop, choose a size and color, and it gets printed layer by layer just for you.</p>
+        <div class="hero-actions">
+          <a href="#shop" class="btn btn-primary">Browse the shop</a>
+          <a href="#custom" class="btn btn-ghost">Upload your own file</a>
+        </div>
+        <dl class="facts">
+          <div><dt>30</dt><dd>things in the shop</dd></div>
+          <div><dt>12</dt><dd>filament colors</dd></div>
+          <div><dt>$5</dt><dd>prints start at</dd></div>
+        </dl>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="printer">
+          <div class="gantry"><div class="head"></div></div>
+          <div class="stack">
+            <i style="--w:90%;--c:var(--berry);--d:0.2s"></i>
+            <i style="--w:88%;--c:var(--berry);--d:0.5s"></i>
+            <i style="--w:86%;--c:var(--orange);--d:0.8s"></i>
+            <i style="--w:84%;--c:var(--orange);--d:1.1s"></i>
+            <i style="--w:80%;--c:var(--teal);--d:1.4s"></i>
+            <i style="--w:74%;--c:var(--teal);--d:1.7s"></i>
+            <i style="--w:66%;--c:var(--mustard);--d:2.0s"></i>
+            <i style="--w:58%;--c:var(--mustard);--d:2.3s"></i>
+          </div>
+          <div class="bed"></div>
+        </div>
+        <p class="tag tag-a">layer 0.2 mm</p>
+        <p class="tag tag-b">PLA · 210°C</p>
+      </div>
+    </section>
+
+    <section class="shop" id="shop">
+      <div class="section-head">
+        <h2>The shop</h2>
+        <p>Prices are a range — small &amp; simple sits at the bottom, large or extra-detailed at the top. Pick your size when you add it to the cart.</p>
+      </div>
+      <div class="filters" id="filters" role="tablist" aria-label="Filter by category"></div>
+      <ul class="grid" id="grid"></ul>
+    </section>
+
+    <section class="custom" id="custom">
+      <div class="custom-intro">
+        <p class="kicker">Got an idea or a file?</p>
+        <h2>Send it, and I'll make it.</h2>
+        <p>Upload an STL, 3MF, STEP, SVG, DXF, sketch or photo of what you want. Tell me the size, colors and how many. You'll get a quote by email before anything is printed.</p>
+        <ul class="ticks">
+          <li>3D files: STL, 3MF, OBJ, STEP, F3D, SCAD</li>
+          <li>Laser files (for when it launches): SVG, DXF, AI, PDF</li>
+          <li>Or just a photo or drawing — up to 8 files, 5.5 MB each</li>
+        </ul>
+      </div>
+
+      <form class="card form" id="requestForm" novalidate>
+        <div class="row2">
+          <label>Your name<input name="name" required autocomplete="name" /></label>
+          <label>Email<input name="email" type="email" required autocomplete="email" /></label>
+        </div>
+        <label>What do you need?
+          <select name="service">
+            <option value="3d-print">A custom 3D print</option>
+            <option value="laser-cut">Laser cutting (coming soon — get on the list)</option>
+            <option value="app">An app built</option>
+            <option value="other">Something else</option>
+          </select>
+        </label>
+        <label>Describe it<textarea name="description" rows="4" required placeholder="e.g. A replacement knob for my dresser, about 3 cm wide, in white. Photo attached."></textarea></label>
+        <div class="row3">
+          <label>Quantity<input name="quantity" type="number" min="1" value="1" /></label>
+          <label>Colors<input name="colors" placeholder="Teal + white" /></label>
+          <label>Budget<input name="budget" placeholder="About $15" /></label>
+        </div>
+
+        <div class="drop" id="drop" tabindex="0" role="button" aria-label="Upload files">
+          <input type="file" id="fileInput" multiple hidden />
+          <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 32V12m0 0-8 8m8-8 8 8M10 34v4h28v-4" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <p><strong>Drop files here</strong> or click to choose</p>
+        </div>
+        <ul class="files" id="fileList"></ul>
+
+        <p class="form-msg" id="requestMsg" role="status"></p>
+        <button class="btn btn-primary" type="submit" id="requestSubmit">Send request</button>
+      </form>
+    </section>
+
+    <section class="next" id="next">
+      <div class="section-head">
+        <h2>What's on the workbench</h2>
+        <p>More ways to make things are on the way.</p>
+      </div>
+      <div class="next-grid">
+        <article class="next-card laser">
+          <span class="badge">Coming soon</span>
+          <h3>Laser cutting</h3>
+          <p>Engraved wood signs, acrylic keychains, coasters, ornaments and cut-to-shape parts. Already have a design? Send it in now and you'll be first in line.</p>
+          <a href="#custom" data-service="laser-cut" class="link">Join the laser list →</a>
+        </article>
+        <article class="next-card vike">
+          <span class="badge">In development</span>
+          <h3>Vike</h3>
+          <p>A buildable robotics kit — motors, sensors and a programmable hub — designed as an affordable alternative to LEGO SPIKE Prime for classrooms and home builders.</p>
+          <a href="#custom" data-service="other" class="link">Get updates on Vike →</a>
+        </article>
+        <article class="next-card apps">
+          <span class="badge badge-live">Available now</span>
+          <h3>Canopy Scan</h3>
+          <p>Browser tool that marks mountain pine beetle red-attack crowns in drone photos and video. Runs fully on your device — nothing is uploaded.</p>
+          <a href="/canopy-scan.html" class="link">Open Canopy Scan →</a>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p><strong>Nozzle and Beam</strong> — custom 3D prints, laser cutting (soon), apps &amp; Vike.</p>
+    <p class="mono">Every piece is printed to order. Small layer lines are part of the charm.</p>
+  </footer>
+
+  <!-- Product options -->
+  <dialog id="productDialog" class="dialog">
+    <form method="dialog" class="dialog-body" id="productForm">
+      <button class="x" value="cancel" aria-label="Close">×</button>
+      <div class="dialog-top">
+        <div class="dialog-icon" id="pdIcon"></div>
+        <div>
+          <h3 id="pdName"></h3>
+          <p id="pdBlurb" class="muted"></p>
+        </div>
+      </div>
+      <fieldset>
+        <legend>Size</legend>
+        <div class="sizes" id="pdSizes"></div>
+      </fieldset>
+      <fieldset>
+        <legend>Color <span id="pdColorName" class="muted"></span></legend>
+        <div class="swatches" id="pdColors"></div>
+      </fieldset>
+      <label id="pdPersonalWrap">Name / text to print <span class="muted">(optional)</span>
+        <input id="pdPersonal" maxlength="80" placeholder="e.g. The Okafors" />
+      </label>
+      <div class="dialog-foot">
+        <label class="qty">Qty<input id="pdQty" type="number" min="1" max="25" value="1" /></label>
+        <button class="btn btn-primary" id="pdAdd" value="add">Add to cart · <span id="pdPrice"></span></button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Cart drawer -->
+  <div class="scrim" id="scrim" hidden></div>
+  <aside class="drawer" id="drawer" aria-label="Shopping cart" aria-hidden="true">
+    <div class="drawer-head">
+      <h3>Your cart</h3>
+      <button class="x" id="cartClose" aria-label="Close cart">×</button>
+    </div>
+    <ul class="cart-items" id="cartItems"></ul>
+    <div class="cart-empty" id="cartEmpty">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><rect x="14" y="40" width="36" height="6" rx="3" fill="var(--teal)"/><rect x="18" y="32" width="28" height="6" rx="3" fill="var(--mustard)" opacity=".6"/><rect x="22" y="24" width="20" height="6" rx="3" fill="none" stroke="var(--ink)" stroke-dasharray="3 3"/></svg>
+      <p>Nothing on the print bed yet.</p>
+      <a href="#shop" class="link" id="emptyShop">Browse the shop →</a>
+    </div>
+    <form class="checkout" id="checkoutForm" novalidate>
+      <div class="total"><span>Total</span><strong id="cartTotal">$0.00</strong></div>
+      <label>Name<input name="name" required autocomplete="name" /></label>
+      <label>Email<input name="email" type="email" required autocomplete="email" /></label>
+      <label>Shipping address<textarea name="address" rows="3" required autocomplete="street-address"></textarea></label>
+      <label>Notes for the maker <span class="muted">(optional)</span><textarea name="notes" rows="2"></textarea></label>
+      <p class="form-msg" id="checkoutMsg" role="status"></p>
+      <button class="btn btn-primary btn-wide" type="submit" id="checkoutBtn">Checkout with Stripe</button>
+      <p class="fine">Secure payments powered by Stripe. Shipping confirmed by email after you pay.</p>
+    </form>
+  </aside>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script type="module" src="/js/app.js"></script>
+</body>
+</html>
