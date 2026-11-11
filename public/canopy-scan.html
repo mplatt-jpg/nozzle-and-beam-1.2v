@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Canopy Scan</title>
+<style>
+:root{--bg:#f3f0e8;--sf:#fff;--tx:#1d2a1f;--mu:#6a7468;--ac:#b8321f;--bd:#d9d3c5;--vw:#222;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121813;--sf:#1c241e;--tx:#e8ece6;--mu:#9aa89c;--ac:#ff6a4d;--bd:#33403a;--vw:#0a0d0b}}
+:root[data-theme="dark"]{--bg:#121813;--sf:#1c241e;--tx:#e8ece6;--mu:#9aa89c;--ac:#ff6a4d;--bd:#33403a;--vw:#0a0d0b}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--bg);color:var(--tx);font:14px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
+header{padding:12px 16px 4px}h1{font-size:20px;margin:0}header p{margin:2px 0 0;color:var(--mu);font-size:13px}
+.bar{display:flex;flex-wrap:wrap;gap:6px;padding:8px 16px;align-items:center}
+button,label.btn{font:inherit;background:var(--sf);color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:6px 10px;cursor:pointer}
+button:hover,label.btn:hover{border-color:var(--ac)}button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+main{display:grid;grid-template-columns:1fr 300px;gap:12px;padding:0 16px 16px}
+@media(max-width:800px){main{grid-template-columns:1fr}}
+#stage{position:relative;height:min(68vh,640px);background:var(--vw);border-radius:10px;overflow:hidden;touch-action:none}
+canvas{width:100%;height:100%;display:block;cursor:crosshair}
+#zc{position:absolute;right:8px;top:8px;display:flex;flex-direction:column;gap:4px}
+#zc button{width:34px;padding:4px 0;background:rgba(0,0,0,.55);color:#fff;border-color:transparent}
+#zl{position:absolute;left:8px;bottom:8px;background:rgba(0,0,0,.6);color:#fff;font-size:12px;padding:2px 8px;border-radius:6px}
+aside{background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:12px;max-height:min(68vh,640px);overflow:auto}
+.big{font-size:44px;font-weight:700;color:var(--ac);line-height:1}.mu{color:var(--mu);font-size:12px}
+.meter{height:8px;background:var(--bd);border-radius:4px;margin:8px 0;overflow:hidden}.meter i{display:block;height:100%;background:var(--ac)}
+#list{margin-top:10px;display:flex;flex-direction:column;gap:3px}
+#list button{display:flex;justify-content:space-between;text-align:left;padding:4px 8px;font-size:13px}
+#list button.on{background:var(--ac);color:#fff}
+input[type=range]{width:140px}
+label.up{background:var(--ac);color:#fff;border-color:var(--ac);font-weight:600}
+#thumbs{padding-top:0}#thumbs:empty{display:none}#thumbs button{font-size:12px;padding:4px 8px}
+#drop{display:none;position:absolute;inset:8px;border:3px dashed #fff;border-radius:10px;background:rgba(0,0,0,.6);color:#fff;align-items:center;justify-content:center;font-size:18px;pointer-events:none}
+</style></head><body>
+<header style="display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:8px">
+  <div>
+    <p style="margin:0 0 4px"><a href="/" style="color:var(--mu);text-decoration:none;font-size:13px">← Nozzle and Beam</a></p>
+    <h1>Canopy Scan</h1>
+    <p>Finds mountain pine beetle red-attack crowns in drone stills and video. Everything runs in your browser; nothing is uploaded.</p>
+  </div>
+</header>
+<div class="bar" id="samples"></div>
+<div class="bar">
+<label class="btn up">⬆ Upload photos / videos<input id="file" type="file" accept="image/*,video/*" multiple hidden></label>
+<button id="scanv" disabled>Scan 12 frames</button>
+<span>Sensitivity <input id="sens" type="range" min="0" max="100" value="50"></span>
+<button id="rerun">Re-run</button>
+<span class="mu" id="status"></span>
+</div>
+<div id="thumbs" class="bar"></div>
+<main>
+<div id="stage"><canvas id="cv"></canvas>
+<div id="zc"><button id="zi" title="Zoom in">+</button><button id="zo" title="Zoom out">−</button><button id="zf" title="Fit">Fit</button><button id="z1" title="Actual pixels">1:1</button></div>
+<div id="zl"></div><div id="drop">Drop photos or videos here to scan</div></div>
+<aside><div id="info"></div><div id="list"></div></aside>
+</main>
+<script>
+const $=id=>document.getElementById(id),cv=$('cv'),ctx=cv.getContext('2d');
+let img,W=0,H=0,crowns=[],sel=-1,view={s:1,x:0,y:0,min:1},sens=.5,vid=null,dpr=window.devicePixelRatio||1,box={w:1,h:1},anim=0;
+const MAXS=64;
+/* ---------- sample stands ---------- */
+const S=[
+['Scattered kill',{n:1700,R:20,f:(x,y,r)=>r()<.06?'r':'g'}],
+['Heavy outbreak',{n:1800,R:20,f:(x,y,r)=>r()<(Math.hypot(x-.6,(y-.4)*.62)<.2?.88:.07)?'r':'g'}],
+['Road edge',{n:1500,R:20,road:1,f:(x,y,r)=>r()<(Math.abs(y-(.2+.6*x))<.14?.45:.04)?'r':'g'}],
+['Open plantation',{grid:1,R:30,f:(x,y,r)=>r()<.12?'r':'g'}],
+['Drainage pocket',{n:1700,R:20,f:(x,y,r)=>{if(Math.hypot(x-.35,y-.62)<.1)return r()<.85?'r':'g';return Math.abs(y-(.55+.12*Math.sin(x*6)))<.12&&r()<.5?'y':'g'}}],
+['Gray snags',{n:1700,R:20,f:(x,y,r)=>{const u=r();return u<.35?'k':u<.4?'r':'g'}}]];
+function rng(s){return()=>(s=(s*1664525+1013904223)>>>0)/4294967296}
+function col(t,r){const j=(a,b)=>a+(b-a)*r();
+ if(t=='r')return`hsl(${j(5,22)},${j(55,72)}%,${j(30,42)}%)`;
+ if(t=='y')return`hsl(${j(44,58)},${j(50,62)}%,${j(36,48)}%)`;
+ if(t=='k')return`hsl(30,${j(4,10)}%,${j(48,62)}%)`;
+ return`hsl(${j(95,135)},${j(28,45)}%,${j(15,28)}%)`}
+function sample(i){
+ const [name,o]=S[i],r=rng(i*97+13),c=document.createElement('canvas');c.width=2400;c.height=1500;
+ const g=c.getContext('2d'),w=2400,h=1500;
+ g.fillStyle='#3b3a2a';g.fillRect(0,0,w,h);
+ for(let k=0;k<6000;k++){g.fillStyle=`hsl(${70+r()*30},${15+r()*15}%,${18+r()*12}%)`;g.fillRect(r()*w,r()*h,6+r()*14,3+r()*5)}
+ if(o.road){g.strokeStyle='#a98f68';g.lineWidth=58;g.lineCap='round';g.beginPath();g.moveTo(-20,.2*h);g.lineTo(w+20,.8*h);g.stroke()}
+ const pts=[];
+ if(o.grid){for(let a=0;a<22;a++)for(let b=0;b<14;b++)pts.push([(a+.5+(r()-.5)*.3)/22,(b+.5+(r()-.5)*.3)/14])}
+ else for(let k=0;k<o.n;k++){const x=r(),y=r();if(o.road&&Math.abs(y-(.2+.6*x))<.025)continue;pts.push([x,y])}
+ pts.sort((a,b)=>a[1]-b[1]);
+ for(const[x,y]of pts){const t=o.f(x,y,r),R=o.R*(.75+r()*.6),px=x*w,py=y*h;
+  g.fillStyle='rgba(0,0,0,.28)';g.beginPath();g.ellipse(px+R*.35,py+R*.4,R,R*.85,0,0,7);g.fill();
+  g.fillStyle=col(t,r);g.beginPath();g.arc(px,py,R,0,7);g.fill();
+  for(let k=0;k<34;k++){const a=r()*6.28,d=Math.sqrt(r())*R*.85;g.fillStyle=col(t,r);g.beginPath();g.arc(px+Math.cos(a)*d,py+Math.sin(a)*d,R*(.1+r()*.16),0,7);g.fill()}}
+ setCanvas(c,name);
+}
+/* ---------- image handling ---------- */
+function setCanvas(c,name){img=c;W=c.width;H=c.height;sel=-1;run();fit();status(name)}
+function status(t){$('status').textContent=t||''}
+function grab(src,sw,sh){const k=Math.min(1,2400/sw),c=document.createElement('canvas');c.width=Math.round(sw*k);c.height=Math.round(sh*k);c.getContext('2d').drawImage(src,0,0,c.width,c.height);return c}
+const items=[];let cur=-1;
+const esc=s=>s.replace(/[&<>"]/g,c=>'&#'+c.charCodeAt(0)+';');
+$('file').onchange=e=>{addFiles(e.target.files);e.target.value=''};
+function addFiles(fl){const a=[...fl].filter(f=>/^(image|video)\//.test(f.type));
+ if(!a.length){status('Those files are not images or videos.');return}
+ const first=items.length;a.forEach(f=>items.push({f,name:f.name}));openItem(first)}
+function thumbs(){$('thumbs').innerHTML=items.map((it,i)=>`<button data-i="${i}" class="${i==cur?'on':''}">${it.f.type.startsWith('video')?'🎞':'🖼'} ${esc(it.name).slice(0,24)}</button>`).join('');
+ document.querySelectorAll('#thumbs button').forEach(b=>b.onclick=()=>openItem(+b.dataset.i))}
+function openItem(i){cur=i;thumbs();vid=null;$('scanv').disabled=true;
+ document.querySelectorAll('#samples button').forEach(x=>x.classList.remove('on'));
+ const f=items[i].f;status('Loading '+f.name+'…');
+ if(f.type.startsWith('video'))loadVideo(f,false);
+ else{const fr=new FileReader();fr.onload=()=>{const im=new Image();im.onload=()=>{if(items[cur]&&items[cur].f===f)setCanvas(grab(im,im.naturalWidth,im.naturalHeight),f.name)};im.onerror=()=>status('Could not read this image.');im.src=fr.result};fr.readAsDataURL(f)}}
+function loadVideo(f,fb){const v=document.createElement('video');v.muted=true;v.playsInline=true;v.preload='auto';
+ v.onloadeddata=()=>{if(!items[cur]||items[cur].f!==f)return;vid=v;$('scanv').disabled=false;
+  v.onseeked=()=>{v.onseeked=null;setCanvas(grab(v,v.videoWidth,v.videoHeight),f.name);$('scanv').click()};v.currentTime=Math.min(.1,v.duration/2)};
+ v.onerror=()=>{if(!fb)loadVideo(f,true);else status('This browser could not decode that video here. Try MP4 (H.264) or a still frame.')};
+ if(!fb)v.src=URL.createObjectURL(f);else{const fr=new FileReader();fr.onload=()=>{v.src=fr.result};fr.readAsDataURL(f)}}
+const stage=$('stage');
+stage.addEventListener('dragover',e=>{e.preventDefault();$('drop').style.display='flex'});
+stage.addEventListener('dragleave',()=>$('drop').style.display='none');
+stage.addEventListener('drop',e=>{e.preventDefault();$('drop').style.display='none';addFiles(e.dataTransfer.files)});
+const seek=(v,t)=>new Promise(r=>{v.onseeked=()=>{v.onseeked=null;r()};v.currentTime=t});
+$('scanv').onclick=async()=>{
+ if(!vid)return;let best=null;
+ for(let i=0;i<12;i++){status(`Scanning frame ${i+1} of 12…`);await seek(vid,(i+.5)/12*vid.duration);
+  img=grab(vid,vid.videoWidth,vid.videoHeight);W=img.width;H=img.height;detect();
+  const sc=crowns.reduce((a,c)=>a+c.p,0);if(!best||sc>best.sc)best={sc,img,crowns,t:vid.currentTime}}
+ img=best.img;crowns=best.crowns;sel=-1;fit();render();status(`Best frame at ${best.t.toFixed(1)}s`)};
+$('sens').oninput=e=>{sens=e.target.value/100};
+$('rerun').onclick=()=>{sel=-1;run()};
+/* ---------- detection ---------- */
+function dil(a,w,h,r){const o=new Uint8Array(a.length),p=new Uint8Array(a.length);
+ for(let y=0;y<h;y++)for(let x=0;x<w;x++){let v=0;for(let d=-r;d<=r;d++){const xx=x+d;if(xx>=0&&xx<w&&a[y*w+xx]){v=1;break}}o[y*w+x]=v}
+ for(let y=0;y<h;y++)for(let x=0;x<w;x++){let v=0;for(let d=-r;d<=r;d++){const yy=y+d;if(yy>=0&&yy<h&&o[yy*w+x]){v=1;break}}p[y*w+x]=v}return p}
+function detect(){
+ const k=Math.min(1,1200/W),w=Math.round(W*k),h=Math.round(H*k),t=document.createElement('canvas');t.width=w;t.height=h;
+ const tc=t.getContext('2d');tc.drawImage(img,0,0,w,h);const d=tc.getImageData(0,0,w,h).data,n=w*h;
+ const ts=.6-sens*.4,lim=22+sens*18,m=new Uint8Array(n),sc=new Float32Array(n);
+ for(let i=0;i<n;i++){const r=d[i*4],g=d[i*4+1],b=d[i*4+2],mx=Math.max(r,g,b),mn=Math.min(r,g,b);
+  if(mx!=r||mx==mn||mx<56)continue;const s=(mx-mn)/mx;if(s<ts)continue;
+  let hu=60*(((g-b)/(mx-mn)+6)%6);const hd=hu>180?360-hu:hu;if(hd>lim)continue;
+  m[i]=1;sc[i]=Math.min(1,.55*s+.45*(1-hd/lim))}
+ const D=w/38,dm=dil(m,w,h,Math.max(1,Math.round(w/500))),seen=new Uint8Array(n),st=new Int32Array(n),out=[];
+ const minA=Math.max(25,n/40000);
+ const stat=()=>({c:0,s:0,x0:1e9,y0:1e9,x1:-1,y1:-1});
+ const add=(o,x,y,v)=>{o.c++;o.s+=v;if(x<o.x0)o.x0=x;if(x>o.x1)o.x1=x;if(y<o.y0)o.y0=y;if(y>o.y1)o.y1=y};
+ const emit=o=>{if(o.c<minA)return;const bw=o.x1-o.x0+1,bh=o.y1-o.y0+1,cov=Math.min(1,o.c/(.785*bw*bh)),mean=o.s/o.c,
+  p=Math.max(.02,Math.min(.99,mean*.55+cov*.45));
+  out.push({cx:(o.x0+o.x1+1)/2/k,cy:(o.y0+o.y1+1)/2/k,rx:Math.max(6,bw/2+2)/k,ry:Math.max(6,bh/2+2)/k,p,a:o.c/k/k})};
+ for(let i=0;i<n;i++){if(!dm[i]||seen[i])continue;
+  let sp=0,cnt=0;st[sp++]=i;seen[i]=1;const px=[],o=stat();
+  while(sp){const q=st[--sp],x=q%w,y=(q/w)|0;if(m[q]){px.push(q);add(o,x,y,sc[q])}
+   for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const xx=x+dx,yy=y+dy;if(xx<0||yy<0||xx>=w||yy>=h)continue;const j=yy*w+xx;if(dm[j]&&!seen[j]){seen[j]=1;st[sp++]=j}}}
+  if(o.x1-o.x0>1.8*D||o.y1-o.y0>1.8*D){const cells=new Map();
+   for(const q of px){const x=q%w,y=(q/w)|0,key=((x/D)|0)+','+((y/D)|0);let c=cells.get(key);if(!c){c=stat();cells.set(key,c)}add(c,x,y,sc[q])}
+   cells.forEach(emit)}else emit(o)}
+ out.sort((a,b)=>b.p-a.p);crowns=out;
+}
+function run(){status('Scanning…');setTimeout(()=>{detect();render();status(crowns.length+' crowns marked')},20)}
+/* ---------- view / zoom ---------- */
+function resize(){const r=cv.getBoundingClientRect();box={w:r.width,h:r.height};cv.width=r.width*dpr;cv.height=r.height*dpr;if(img){const was=view.s<=view.min*1.001;view.min=Math.min(box.w/W,box.h/H);if(was)fit();else draw()}}
+new ResizeObserver(resize).observe(stage);
+function fit(){view.min=Math.min(box.w/W,box.h/H);view.s=view.min;view.x=(box.w-W*view.s)/2;view.y=(box.h-H*view.s)/2;draw()}
+function clampView(){const w=W*view.s,h=H*view.s;view.x=w<box.w?(box.w-w)/2:Math.min(0,Math.max(box.w-w,view.x));view.y=h<box.h?(box.h-h)/2:Math.min(0,Math.max(box.h-h,view.y))}
+function zoomAt(px,py,f){const s=Math.max(view.min,Math.min(MAXS,view.s*f)),r=s/view.s;view.x=px-(px-view.x)*r;view.y=py-(py-view.y)*r;view.s=s;clampView();draw()}
+function flyTo(c){cancelAnimationFrame(anim);const ts=Math.min(MAXS,Math.max(view.min,Math.min(box.w/(c.rx*5),box.h/(c.ry*5)))),
+ tx=box.w/2-c.cx*ts,ty=box.h/2-c.cy*ts,a={...view};let f=0;
+ const step=()=>{f++;const u=1-Math.pow(1-f/20,3);view.s=a.s*Math.pow(ts/a.s,u);view.x=a.x+(tx-a.x)*u;view.y=a.y+(ty-a.y)*u;clampView();draw();if(f<20)anim=requestAnimationFrame(step)};step()}
+$('zi').onclick=()=>zoomAt(box.w/2,box.h/2,1.8);$('zo').onclick=()=>zoomAt(box.w/2,box.h/2,1/1.8);
+$('zf').onclick=fit;$('z1').onclick=()=>zoomAt(box.w/2,box.h/2,1/view.s*dpr>0?1/view.s:1);
+cv.addEventListener('wheel',e=>{e.preventDefault();const r=cv.getBoundingClientRect();zoomAt(e.clientX-r.left,e.clientY-r.top,Math.exp(-e.deltaY*(e.ctrlKey?.01:.0016)))},{passive:false});
+const ptr=new Map();let pinch=0,moved=0;
+cv.addEventListener('pointerdown',e=>{cv.setPointerCapture(e.pointerId);ptr.set(e.pointerId,[e.clientX,e.clientY]);moved=0;pinch=0});
+cv.addEventListener('pointermove',e=>{if(!ptr.has(e.pointerId))return;const o=ptr.get(e.pointerId);ptr.set(e.pointerId,[e.clientX,e.clientY]);
+ if(ptr.size==1){const dx=e.clientX-o[0],dy=e.clientY-o[1];moved+=Math.abs(dx)+Math.abs(dy);view.x+=dx;view.y+=dy;clampView();draw()}
+ else if(ptr.size==2){const [a,b]=[...ptr.values()],dd=Math.hypot(a[0]-b[0],a[1]-b[1]);moved+=9;
+  if(pinch){const r=cv.getBoundingClientRect();zoomAt((a[0]+b[0])/2-r.left,(a[1]+b[1])/2-r.top,dd/pinch)}pinch=dd}});
+cv.addEventListener('pointerup',e=>{const was=ptr.size;ptr.delete(e.pointerId);if(was==1&&moved<6){const r=cv.getBoundingClientRect();pick(e.clientX-r.left,e.clientY-r.top)}if(ptr.size<2)pinch=0});
+cv.addEventListener('pointercancel',e=>ptr.delete(e.pointerId));
+cv.addEventListener('dblclick',e=>{const r=cv.getBoundingClientRect();zoomAt(e.clientX-r.left,e.clientY-r.top,2.5)});
+function pick(px,py){let b=-1,bd=1e9;crowns.forEach((c,i)=>{const sx=c.cx*view.s+view.x,sy=c.cy*view.s+view.y,rx=Math.max(c.rx*view.s,8),ry=Math.max(c.ry*view.s,8),
+ q=((px-sx)/rx)**2+((py-sy)/ry)**2;if(q<=1&&q<bd){bd=q;b=i}});select(b,false)}
+function select(i,fly){sel=i;if(i>=0&&fly)flyTo(crowns[i]);else draw();panel()}
+/* ---------- drawing ---------- */
+function draw(){if(!img)return;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,box.w,box.h);
+ ctx.imageSmoothingEnabled=view.s<3;ctx.drawImage(img,view.x,view.y,W*view.s,H*view.s);
+ const th=sel<0?0:1;
+ crowns.forEach((c,i)=>{const sx=c.cx*view.s+view.x,sy=c.cy*view.s+view.y,rx=c.rx*view.s,ry=c.ry*view.s;
+  if(sx+rx<0||sy+ry<0||sx-rx>box.w||sy-ry>box.h)return;
+  const hue=50-c.p*50,on=i==sel;ctx.lineWidth=on?3.5:1.6;ctx.strokeStyle=on?'#fff':`hsl(${hue},95%,55%)`;
+  ctx.beginPath();ctx.ellipse(sx,sy,Math.max(rx,3),Math.max(ry,3),0,0,7);ctx.stroke();
+  if(on){ctx.strokeStyle='#000';ctx.lineWidth=1;ctx.beginPath();ctx.ellipse(sx,sy,Math.max(rx,3)+3,Math.max(ry,3)+3,0,0,7);ctx.stroke()}
+  if(rx>20||on){const t=Math.round(c.p*100)+'%';ctx.font='600 12px system-ui';ctx.lineWidth=3;ctx.strokeStyle='rgba(0,0,0,.7)';ctx.strokeText(t,sx-12,sy+4);ctx.fillStyle='#fff';ctx.fillText(t,sx-12,sy+4)}});
+ $('zl').textContent=(view.s/view.min).toFixed(1)+'× zoom';
+}
+function render(){draw();panel()}
+function panel(){
+ const tot=crowns.length,hi=crowns.filter(c=>c.p>=.7).length,c=crowns[sel];
+ $('info').innerHTML=c?`<div class="mu">Selected crown #${sel+1}</div><div class="big">${Math.round(c.p*100)}%</div><div class="mu">red-attack probability</div>
+ <div class="meter"><i style="width:${c.p*100}%"></i></div>
+ <div class="mu">Approx. width ${Math.round(c.rx*2)} px · position ${Math.round(c.cx)}, ${Math.round(c.cy)}<br>${c.p>=.7?'Strong rust/brick signal.':c.p>=.4?'Mixed: possible kill or partial fade.':'Weak signal: could be soil, roof or fading needles.'}</div>`
+ :`<b>${tot} crowns marked</b><div class="mu">${hi} at 70% or higher. Click a ring or pick one below. Scroll or pinch to zoom, drag to pan, double-click to zoom in.</div>`;
+ $('list').innerHTML=crowns.slice(0,60).map((c,i)=>`<button data-i="${i}" class="${i==sel?'on':''}"><span>Crown ${i+1}</span><span>${Math.round(c.p*100)}%</span></button>`).join('');
+ document.querySelectorAll('#list button').forEach(b=>b.onclick=()=>select(+b.dataset.i,true));
+}
+/* ---------- init ---------- */
+S.forEach((s,i)=>{const b=document.createElement('button');b.textContent=s[0];b.onclick=()=>{vid=null;cur=-1;thumbs();$('scanv').disabled=true;document.querySelectorAll('#samples button').forEach(x=>x.classList.remove('on'));b.classList.add('on');sample(i)};$('samples').appendChild(b)});
+resize();$('samples').firstChild.click();
+</script></body></html>
