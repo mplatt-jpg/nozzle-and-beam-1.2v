@@ -363,6 +363,8 @@ $("#fileList").addEventListener("click", (e) => {
   renderFiles();
 });
 
+const FORMSPREE_ENDPOINT = "https://formspree.io/f/xoedqnvw";
+
 $("#requestForm").addEventListener("submit", async (e) => {
   e.preventDefault();
   const form = e.currentTarget;
@@ -374,9 +376,19 @@ $("#requestForm").addEventListener("submit", async (e) => {
   btn.textContent = "Sending…";
   showMsg(msg, "");
 
+  const data = Object.fromEntries(new FormData(form));
+  data._subject = `Nozzle and Beam request — ${data.service || "custom"}`;
+  data._replyto = data.email;
+  data.file_names = uploads.map((u) => u.file.name).join(", ") || "(none)";
+
   try {
-    // Placeholder – replace with a real Netlify function or form service later
-    await new Promise((r) => setTimeout(r, 900));
+    const res = await fetch(FORMSPREE_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify(data),
+    });
+    const body = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(body.error || "Could not send. Please try again.");
     showMsg(msg, "Request sent! I’ll email you a quote soon.", "ok");
     form.reset();
     uploads = [];
