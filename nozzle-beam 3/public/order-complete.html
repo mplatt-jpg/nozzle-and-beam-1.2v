@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Order complete — Nozzle and Beam</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+  <style>
+    .thanks {
+      max-width: 520px;
+      margin: 4rem auto;
+      padding: 2.5rem 1.5rem;
+      text-align: center;
+    }
+    .thanks h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin: 0 0 0.75rem;
+    }
+    .thanks p { color: var(--ink-muted); margin: 0 0 1.5rem; }
+    .check {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 1.5rem;
+      border-radius: 50%;
+      background: rgba(0, 212, 184, 0.15);
+      display: grid;
+      place-items: center;
+      color: var(--teal);
+    }
+    .check svg { width: 36px; height: 36px; }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a href="/" class="brand" aria-label="Nozzle and Beam home">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M12 4h16v8l-5 7h-6l-5-7z" fill="var(--ink)"/><path d="M18 19h4l-2 5z" fill="var(--orange)"/><rect x="6" y="30" width="28" height="3" rx="1.5" fill="var(--orange)"/><rect x="10" y="26" width="20" height="3" rx="1.5" fill="var(--teal)"/><rect x="14" y="34" width="12" height="3" rx="1.5" fill="var(--mustard)"/></svg>
+      <span>Nozzle and Beam</span>
+    </a>
+  </header>
+
+  <main class="thanks">
+    <div class="check">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+    </div>
+    <h1>Order received</h1>
+    <p>Thanks for your order. You’ll get a confirmation email from Stripe, and I’ll follow up about shipping once the print is underway.</p>
+    <a href="/" class="btn btn-primary">Back to the shop</a>
+  </main>
+</body>
+</html>
