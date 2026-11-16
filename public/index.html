@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Ibex.tech — prints, tools, and small software</title>
-  <meta name="description" content="Ibex.tech is an independent studio. Custom 3D prints, Canopy Scan for pine-beetle crowns, and made-to-order work." />
+  <meta name="description" content="Ibex.tech is an independent studio. Custom 3D prints, Canopy Scan, Gene Forge, and made-to-order work." />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -22,6 +22,7 @@
         <a href="/" class="active">Home</a>
         <a href="/shop.html">Shop</a>
         <a href="/canopy-scan.html">Canopy Scan</a>
+        <a href="/gene-forge.html">Gene Forge</a>
         <a href="/shop.html#custom">Custom work</a>
         <a href="#studio">Studio</a>
       </nav>
@@ -35,7 +36,7 @@
         <p class="kicker">Ibex.tech</p>
         <h1>Prints, tools, and <em>small software.</em></h1>
         <p class="lead">
-          Ibex.tech is an independent studio. We make custom 3D prints under Nozzle and Beam, a browser tool that marks pine-beetle red-attack crowns, and small made-to-order work when you already have a file or idea.
+          Ibex.tech is an independent studio. We make custom 3D prints under Nozzle and Beam, browser tools like Canopy Scan and Gene Forge, and small made-to-order work when you already have a file or idea.
         </p>
         <div class="hero-actions">
           <a class="btn btn-primary" href="#products">What we make</a>
@@ -44,8 +45,8 @@
         <div class="tags">
           <span class="tag">3D prints</span>
           <span class="tag">Canopy Scan</span>
+          <span class="tag">Gene Forge</span>
           <span class="tag">Custom files</span>
-          <span class="tag">Runs in the browser</span>
         </div>
       </div>
       <div class="hero-art" aria-hidden="true">
@@ -56,7 +57,7 @@
     <section class="wrap" id="products">
       <p class="section-label">Products</p>
       <h2>What we make.</h2>
-      <p class="sub">A print shop you can order from today, a free canopy tool that stays on your device, and a path for custom files or small apps.</p>
+      <p class="sub">A print shop, free browser tools, and a path for custom files or small apps.</p>
 
       <div class="products">
         <article class="product">
@@ -72,7 +73,7 @@
           </div>
           <dl class="side">
             <dt>Status</dt><dd>Open for orders</dd>
-            <dt>Payments</dt><dd>Stripe (test or live keys)</dd>
+            <dt>Payments</dt><dd>Stripe</dd>
             <dt>Where</dt><dd>This website</dd>
             <a class="btn btn-primary" href="/shop.html">Open the shop</a>
           </dl>
@@ -82,18 +83,37 @@
           <div>
             <p class="product-meta">Canopy Scan · free browser tool</p>
             <h3>Mark red-attack crowns in drone stills and video.</h3>
-            <p>Built for mountain pine beetle work. Upload photos or sample frames, tune sensitivity, and inspect marked crowns. Everything runs in your browser — nothing is uploaded to a server.</p>
+            <p>Built for mountain pine beetle work. Upload photos or sample frames, tune sensitivity, and inspect marked crowns. Everything runs in your browser.</p>
             <div class="features">
-              <div class="feature"><div><b>01 — DETECT</b><span>Highlights rust / brick-colored canopy patches with a probability score.</span></div></div>
-              <div class="feature"><div><b>02 — LOCAL</b><span>Stays on your device. No account. No cloud processing.</span></div></div>
-              <div class="feature"><div><b>03 — SAMPLE</b><span>Includes a Black Hills aerial sample plus synthetic practice stands.</span></div></div>
+              <div class="feature"><div><b>01 — DETECT</b><span>Highlights rust / brick canopy patches with a probability score.</span></div></div>
+              <div class="feature"><div><b>02 — LOCAL</b><span>Stays on your device. No account.</span></div></div>
+              <div class="feature"><div><b>03 — SAMPLE</b><span>Black Hills aerial sample plus synthetic stands.</span></div></div>
             </div>
           </div>
           <dl class="side">
             <dt>Status</dt><dd>Available now</dd>
-            <dt>Platform</dt><dd>Any modern browser</dd>
-            <dt>Price</dt><dd>Free on this site</dd>
+            <dt>Platform</dt><dd>Browser</dd>
+            <dt>Price</dt><dd>Free</dd>
             <a class="btn btn-primary" href="/canopy-scan.html">Open Canopy Scan</a>
+          </dl>
+        </article>
+
+        <article class="product">
+          <div>
+            <p class="product-meta">Gene Forge · free browser tool</p>
+            <h3>Print genetics on a virtual bio-printer.</h3>
+            <p>Pick parent genotypes, a dominance pattern, and allele colors. Watch layers print as complete, incomplete, or codominant offspring — single or batch of 9 or 16.</p>
+            <div class="features">
+              <div class="feature"><div><b>01 — PUNNETT</b><span>Live Punnett square from Slot A × Slot B.</span></div></div>
+              <div class="feature"><div><b>02 — 3D PRINT</b><span>Layer-by-layer creatures with orbit, zoom, and scan on hover.</span></div></div>
+              <div class="feature"><div><b>03 — LOCAL</b><span>Runs in the browser. Save and load print jobs as JSON.</span></div></div>
+            </div>
+          </div>
+          <dl class="side">
+            <dt>Status</dt><dd>Available now</dd>
+            <dt>Platform</dt><dd>Browser</dd>
+            <dt>Price</dt><dd>Free</dd>
+            <a class="btn btn-primary" href="/gene-forge.html">Open Gene Forge</a>
           </dl>
         </article>
 
@@ -103,14 +123,14 @@
             <h3>Files, one-offs, and small tools.</h3>
             <p>Already have an STL, a sketch, or an idea for a simple web tool? Send it through the shop form. You’ll get a reply by email before any work starts.</p>
             <div class="features">
-              <div class="feature"><div><b>01 — PRINT FILES</b><span>STL, 3MF, STEP, and similar for one-off or short-run prints.</span></div></div>
-              <div class="feature"><div><b>02 — LASER LIST</b><span>Join the list for laser cutting when that service opens.</span></div></div>
+              <div class="feature"><div><b>01 — PRINT FILES</b><span>STL, 3MF, STEP, and similar.</span></div></div>
+              <div class="feature"><div><b>02 — LASER LIST</b><span>Join the list for laser cutting when it opens.</span></div></div>
               <div class="feature"><div><b>03 — SMALL APPS</b><span>Focused browser tools when a full product isn’t needed yet.</span></div></div>
             </div>
           </div>
           <dl class="side">
             <dt>Status</dt><dd>Request form open</dd>
-            <dt>Contact</dt><dd>Formspree → your inbox</dd>
+            <dt>Contact</dt><dd>Formspree</dd>
             <dt>Where</dt><dd>Shop → Send a file</dd>
             <a class="btn btn-primary" href="/shop.html#custom">Send a request</a>
           </dl>
@@ -121,7 +141,7 @@
     <section class="wrap" id="studio">
       <p class="section-label">Studio</p>
       <h2>Independent. Email when you need us.</h2>
-      <p class="sub">Ibex.tech runs the shop, Canopy Scan, and custom requests on this site. Support is email through the request form.</p>
+      <p class="sub">Ibex.tech runs the shop, Canopy Scan, Gene Forge, and custom requests on this site.</p>
       <div class="grid3">
         <div class="card">
           <h3>Shop</h3>
@@ -129,11 +149,11 @@
         </div>
         <div class="card">
           <h3>Canopy Scan</h3>
-          <p>Free, on-device analysis. Not an official survey product — use your own judgment in the field.</p>
+          <p>Free, on-device analysis. Not an official survey product.</p>
         </div>
         <div class="card">
-          <h3>Contact</h3>
-          <p>Use the form on the shop page. Formspree delivers messages to the studio inbox.</p>
+          <h3>Gene Forge</h3>
+          <p>Genetics as a 3D print job. Dominance patterns and virtual creatures.</p>
         </div>
       </div>
     </section>
@@ -150,14 +170,15 @@
           <strong>Product links</strong>
           <a href="/shop.html">Shop</a><br />
           <a href="/canopy-scan.html">Canopy Scan</a><br />
+          <a href="/gene-forge.html">Gene Forge</a><br />
           <a href="/shop.html#custom">Custom request</a>
         </div>
         <div>
           <strong>Notes</strong>
-          Stripe handles card data for shop orders. Canopy Scan does not upload your files. This studio site does not sell software licenses.
+          Stripe handles card data for shop orders. Browser tools do not upload your files.
         </div>
       </div>
-      <p class="legal">© 2026 Ibex.tech. Canopy Scan is a helper tool, not a certified forestry survey. Always verify results with your own field practice.</p>
+      <p class="legal">© 2026 Ibex.tech. Canopy Scan and Gene Forge are helper tools, not certified survey or lab products.</p>
     </div>
   </footer>
 </body>
