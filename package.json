@@ -1,12 +1,8 @@
 {
-  "name": "nozzle-beam",
+  "name": "pika-tech",
   "version": "1.0.0",
   "private": true,
-  "description": "Nozzle & Beam – custom 3D prints shop",
-  "scripts": {
-    "build": "echo 'Static site – no build step needed'"
-  },
-  "dependencies": {
-    "stripe": "^17.4.0"
-  }
+  "description": "Pika Tech — Nozzle and Beam shop + Canopy Scan",
+  "scripts": { "build": "echo 'Static site – no build step needed'" },
+  "dependencies": { "stripe": "^17.4.0" }
 }
