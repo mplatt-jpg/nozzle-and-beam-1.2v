@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" role="img" aria-label="Pika Tech">
+  <defs>
+    <linearGradient id="g" x1="20" y1="10" x2="100" y2="110" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#5cffef"/>
+      <stop offset="1" stop-color="#2ee6d6"/>
+    </linearGradient>
+  </defs>
+  <rect x="8" y="8" width="104" height="104" rx="28" stroke="url(#g)" stroke-width="2" opacity="0.45"/>
+  <path d="M34 48 L42 22 L54 44" stroke="url(#g)" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"/>
+  <path d="M86 48 L78 22 L66 44" stroke="url(#g)" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"/>
+  <path d="M38 52 C38 40, 52 34, 60 34 C68 34, 82 40, 82 52 C82 72, 72 86, 60 86 C48 86, 38 72, 38 52 Z" stroke="url(#g)" stroke-width="3.2"/>
+  <path d="M46 58 C50 62, 70 62, 74 58" stroke="url(#g)" stroke-width="2" stroke-linecap="round" opacity="0.85"/>
+  <circle cx="50" cy="54" r="3.2" fill="#2ee6d6"/>
+  <circle cx="70" cy="54" r="3.2" fill="#2ee6d6"/>
+  <path d="M57 66 L60 70 L63 66" stroke="#2ee6d6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M88 38 C96 46, 96 58, 88 66" stroke="url(#g)" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+  <path d="M94 32 C106 44, 106 60, 94 72" stroke="url(#g)" stroke-width="2" stroke-linecap="round" opacity="0.45"/>
+  <circle cx="60" cy="96" r="3" fill="#2ee6d6" opacity="0.9"/>
+  <path d="M60 86 V93" stroke="#2ee6d6" stroke-width="2" opacity="0.7"/>
+</svg>
