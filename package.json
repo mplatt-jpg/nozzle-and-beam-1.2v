@@ -1,8 +1,8 @@
 {
-  "name": "pika-tech",
+  "name": "ibex-tech",
   "version": "1.0.0",
   "private": true,
-  "description": "Pika Tech — Nozzle and Beam shop + Canopy Scan",
-  "scripts": { "build": "echo 'Static site – no build step needed'" },
+  "description": "Ibex.tech — Nozzle and Beam shop + Canopy Scan",
+  "scripts": { "build": "echo 'Static site'" },
   "dependencies": { "stripe": "^17.4.0" }
 }
