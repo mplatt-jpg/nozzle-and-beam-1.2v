@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Gene Forge</title>
+<style>
+:root{--bg:#f1f1f3;--pan:#fff;--pan2:#f0f0f3;--line:#d2d2d9;--tx:#1d1d22;--mu:#6b6b77;--acc:#fa6831;--vp:#dedee4;--bed:#bcbcc6;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17171a;--pan:#202024;--pan2:#2a2a30;--line:#37373f;--tx:#e8e8ec;--mu:#93939f;--vp:#121214;--bed:#34343c}}
+:root[data-theme="dark"]{--bg:#17171a;--pan:#202024;--pan2:#2a2a30;--line:#37373f;--tx:#e8e8ec;--mu:#93939f;--vp:#121214;--bed:#34343c}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--tx);font:13px/1.4 system-ui,-apple-system,"Segoe UI",sans-serif}
+#root{height:100%}
+.app{display:grid;grid-template-columns:268px 1fr 268px;grid-template-rows:44px 1fr 30px;height:100%;gap:1px;background:var(--line)}
+.app>*{background:var(--pan);min-width:0}
+.hd{grid-column:1/-1;display:flex;align-items:center;gap:14px;padding:0 14px}
+.logo{font-weight:800;letter-spacing:.12em;color:var(--acc)}
+.prog{flex:1;height:8px;background:var(--pan2);border-radius:4px;overflow:hidden;max-width:420px}
+.prog i{display:block;height:100%;background:var(--acc);transition:width .2s}
+.mu{color:var(--mu)}
+.side{overflow:auto;padding:12px;display:flex;flex-direction:column;gap:14px}
+h3{margin:0 0 6px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--mu)}
+.seg{display:flex;gap:4px;flex-wrap:wrap}
+button{font:inherit;color:var(--tx);background:var(--pan2);border:1px solid var(--line);border-radius:6px;padding:6px 10px;cursor:pointer}
+button.on{background:var(--acc);border-color:var(--acc);color:#fff}
+button:disabled{opacity:.5;cursor:default}
+.seg button{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;min-width:0}
+.big{width:100%;padding:11px;font-weight:700;background:var(--acc);border-color:var(--acc);color:#fff;font-size:14px;letter-spacing:.05em}
+.spool{display:inline-flex}.spool i{width:11px;height:11px;border-radius:50%;margin-right:-3px;border:1.5px solid var(--pan)}
+.gt b{font-family:ui-monospace,Menlo,monospace}
+.row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+input[type=color]{width:36px;height:24px;border:1px solid var(--line);background:none;padding:0;border-radius:4px}
+.vc{position:relative;display:flex;min-height:320px}
+.vpw{position:relative;overflow:hidden;flex:1;min-width:0}
+.vpw canvas{display:block;position:absolute;left:0;top:0}
+.tip{position:absolute;pointer-events:none;background:var(--pan);border:1px solid var(--acc);border-radius:8px;padding:8px 10px;box-shadow:0 6px 20px #0005;min-width:170px;z-index:5}
+.pn{border-collapse:collapse;width:100%;text-align:center}.pn td,.pn th{border:1px solid var(--line);padding:4px;font-weight:400}
+.sl{display:flex;flex-direction:column;gap:1px}
+.sl div{display:grid;grid-template-columns:22px 1fr 30px;align-items:center;gap:6px;font:10px ui-monospace,monospace;color:var(--mu)}
+.sl i{height:7px;border-radius:2px;display:block}
+.log{font:11px/1.5 ui-monospace,Menlo,monospace;color:var(--mu);background:var(--pan2);padding:6px 8px;border-radius:6px;min-height:80px}
+.ft{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;padding:0 14px;font-size:12px}
+.modal{position:fixed;inset:0;background:#0008;display:flex;align-items:center;justify-content:center;z-index:9;padding:16px}
+.modal>div{background:var(--pan);border:1px solid var(--line);border-radius:10px;padding:14px;width:min(560px,100%);display:flex;flex-direction:column;gap:10px}
+textarea{height:300px;background:var(--pan2);color:var(--tx);border:1px solid var(--line);border-radius:6px;font:11px ui-monospace,monospace;padding:8px;resize:vertical}
+@media(max-width:900px){body{overflow:auto}#root,.app{height:auto}.app{display:flex;flex-direction:column}.vc{height:60vh}.hd{padding:10px 14px;flex-wrap:wrap}.ft{padding:8px 14px;flex-wrap:wrap;gap:6px}}
+</style></head>
+<body><div id="root"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script>
+const {useState,useEffect,useRef}=React,h=React.createElement;
+const NL=24,LH=.06,EB=19,H=2.6,MODES=['complete','incomplete','codominant'];
+const MN={complete:'Complete',incomplete:'Incomplete',codominant:'Codominant'};
+const sm=(a,b,x)=>{x=Math.min(1,Math.max(0,(x-a)/(b-a)));return x*x*(3-2*x)};
+function layerInfo(g,mode,i,c){
+  if(mode==='complete'){const k=g.includes('A')?'A':'a';return{hex:c[k],tag:k}}
+  if(g[0]===g[1])return{hex:c[g[0]],tag:g[0]};
+  if(mode==='incomplete'){const s=sm(.2,.8,i/(NL-1));
+    const hex='#'+new THREE.Color(c[g[1]]).lerp(new THREE.Color(c[g[0]]),s).getHexString();
+    return{hex,tag:s<.05?g[1]:s>.95?g[0]:'A+a'}}
+  const k=Math.floor(i/2)%2?'a':'A';return{hex:c[k],tag:k}}
+const pheno=(g,m)=>m==='complete'?'Solid · '+(g.includes('A')?'A':'a')+(g[0]!==g[1]?' (dominant)':''):g[0]===g[1]?'Solid · '+g[0]:m==='incomplete'?'Gradient · A→a blend':'Striped · A/a codominant';
+const prof=t=>.05+.5*Math.pow(Math.sin(Math.PI*(.12+.76*Math.pow(t,.9))),.6);
+const bodyR=x=>prof(Math.min(x/EB,1));
+
+function Viewport({job,speed,onLayer,onHover,onDone}){
+  const host=useRef(),A=useRef({}),cb=useRef();cb.current={speed,onLayer,onHover,onDone};
+  useEffect(()=>{
+    const el=host.current,R=new THREE.WebGLRenderer({antialias:true}),S=new THREE.Scene(),cam=new THREE.PerspectiveCamera(40,1,.1,100);
+    el.appendChild(R.domElement);R.setPixelRatio(Math.min(devicePixelRatio,2));
+    const ctl=new THREE.OrbitControls(cam,R.domElement);ctl.enableDamping=true;
+    S.add(new THREE.HemisphereLight(0xffffff,0x666677,.9));const dl=new THREE.DirectionalLight(0xffffff,.8);dl.position.set(4,8,5);S.add(dl);
+    const rig=new THREE.Group(),crs=new THREE.Group();S.add(rig,crs);
+    const bedM=new THREE.MeshStandardMaterial({roughness:.8}),lineM=new THREE.LineBasicMaterial({color:0x888899}),
+      accM=new THREE.MeshStandardMaterial({color:0xfa6831,roughness:.5}),eyeM=new THREE.MeshStandardMaterial({color:0x111111}),
+      padM=new THREE.MeshStandardMaterial({color:0x888899,transparent:true,opacity:.3}),rodM=new THREE.MeshBasicMaterial({color:0x888899});
+    const theme=()=>{const s=getComputedStyle(document.documentElement);R.setClearColor(s.getPropertyValue('--vp').trim());bedM.color.set(s.getPropertyValue('--bed').trim())};
+    theme();const mq=matchMedia('(prefers-color-scheme: dark)');mq.addEventListener('change',theme);
+    const st=A.current;st.cr=[];st.run=false;
+    const hl=idx=>st.cr.forEach((c,i)=>c.mats.forEach(m=>{m.emissive.set(i===idx?m.color:0);m.emissiveIntensity=i===idx?.4:0}));
+    st.build=job=>{
+      [rig,crs].forEach(g=>g.children.slice().forEach(o=>{g.remove(o);o.traverse(x=>x.geometry&&x.geometry.dispose())}));
+      const n=job?job.offspring.length:1,grid=Math.round(Math.sqrt(n)),sp=1.5,W=Math.max(3,grid*sp+.6);
+      const bed=new THREE.Mesh(new THREE.BoxGeometry(W,.12,W),bedM);bed.position.y=-.06;
+      const gh=new THREE.GridHelper(W,Math.round(W*4),0x888899,0x888899);gh.material.transparent=true;gh.material.opacity=.25;gh.position.y=.002;
+      const fr=new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(W,H,W)),lineM);fr.position.y=H/2;
+      st.bar=new THREE.Mesh(new THREE.BoxGeometry(W,.06,.1),accM);st.bar.visible=n===1;
+      rig.add(bed,gh,fr,st.bar);
+      const k=W/3;cam.position.set(4.2*k,3.4*k+.4,5.2*k);ctl.target.set(0,.7,0);
+      const c=job?job.colors:{A:'#ff3b6b',a:'#35c9ff'},parts=[];
+      for(let j=0;j<NL;j++){const p=[];
+        if(j<EB)p.push({g:new THREE.CylinderGeometry(bodyR(j+1),bodyR(j),LH,32).translate(0,LH/2,0)});
+        else{const u=(j-EB)/(NL-EB),d=1/(NL-EB);
+          [-1,1].forEach(s=>p.push({g:new THREE.CylinderGeometry(.1*(1-(u+d)*.8),.1*(1-u*.8),LH,16).translate(0,LH/2,0),x:s*(.2+u*.05)}))}
+        if(j===10)[-1,1].forEach(s=>p.push({eye:1,g:new THREE.SphereGeometry(.06,10,8).translate(0,LH/2,0),x:s*.17,z:Math.sqrt(Math.pow(bodyR(10.5),2)-.029)-.01}));
+        parts.push(p)}
+      st.cr=[];
+      for(let i=0;i<n;i++){
+        const cx=(i%grid-(grid-1)/2)*sp,cz=(Math.floor(i/grid)-(grid-1)/2)*sp,g=job?job.offspring[i].g:'AA';
+        const cg=new THREE.Group();cg.position.set(cx,0,cz);crs.add(cg);
+        if(n>1){const pd=new THREE.Mesh(new THREE.CylinderGeometry(.62,.62,.01,32),padM);pd.position.set(cx,.006,cz);crs.add(pd)}
+        const layers=[],mats=[],hex=[];
+        for(let j=0;j<NL;j++){
+          const hx=job?layerInfo(g,job.mode,j,c).hex:'#999999';hex.push(hx);
+          const lg=new THREE.Group(),mt=new THREE.MeshStandardMaterial({color:hx,roughness:.45});mats.push(mt);
+          lg.position.y=j*LH;lg.visible=!job?false:false;
+          parts[j].forEach(q=>{const m=new THREE.Mesh(q.g,q.eye?eyeM:mt);m.position.set(q.x||0,0,q.z||0);m.userData.cidx=i;lg.add(m)});
+          cg.add(lg);layers.push(lg)}
+        const hd=new THREE.Group(),bead=new THREE.Mesh(new THREE.SphereGeometry(.045,10,8),new THREE.MeshBasicMaterial()),
+          rod=new THREE.Mesh(new THREE.CylinderGeometry(.012,.012,1,6).translate(0,.5,0),rodM);
+        hd.add(new THREE.Mesh(new THREE.ConeGeometry(.05,.14,12).rotateX(Math.PI).translate(0,.07,0),accM),
+          new THREE.Mesh(new THREE.BoxGeometry(.24,.16,.24).translate(0,.22,0),accM),rod,bead);
+        rod.position.y=.3;hd.position.set(cx,H-.7,cz);hd.visible=!!job;crs.add(hd);
+        st.cr.push({cx,cz,layers,mats,hex,hd,rod,bead})}
+      st.p=0;st.L=-1;st.done=false;st.run=!!job;st.hv=null;if(job)cb.current.onLayer(0)};
+    const tick=t=>{st.raf=requestAnimationFrame(tick);const dt=Math.min((t-(st.last||t))/1000,.1);st.last=t;
+      if(st.run){st.p=Math.min(NL,st.p+dt*cb.current.speed);const p=st.p,L=Math.min(Math.floor(p),NL-1),f=p>=NL?1:p-L;
+        st.cr.forEach(c=>{c.layers.forEach((l,j)=>{l.visible=j<=L;l.scale.y=j<L?1:Math.max(f,.03)});
+          const r=L<EB?.8*bodyR(L+.5):.15,a=L*1.3+f*Math.PI*6;
+          c.hd.position.set(c.cx+r*Math.cos(a),(L+f)*LH+.01,c.cz+r*Math.sin(a));c.bead.material.color.set(c.hex[L])});
+        if(L!==st.L){st.L=L;cb.current.onLayer(L)}
+        if(p>=NL){st.run=false;st.done=true;cb.current.onLayer(NL);cb.current.onDone()}}
+      st.cr.forEach(c=>{const q=c.hd,e=Math.min(1,dt*3);
+        if(st.done){q.position.y+=(H-.7-q.position.y)*e;q.position.x+=(c.cx-q.position.x)*e;q.position.z+=(c.cz-q.position.z)*e}
+        c.rod.scale.y=Math.max(.01,H-q.position.y-.3)});
+      if(st.cr.length===1&&st.bar){const q=st.cr[0].hd.position;st.bar.position.set(0,q.y+.35,q.z)}
+      ctl.update();R.render(S,cam)};
+    st.raf=requestAnimationFrame(tick);
+    const ray=new THREE.Raycaster(),m=new THREE.Vector2(),cv=R.domElement;
+    cv.addEventListener('pointermove',ev=>{const b=cv.getBoundingClientRect();
+      m.set((ev.clientX-b.left)/b.width*2-1,-((ev.clientY-b.top)/b.height)*2+1);ray.setFromCamera(m,cam);
+      const hit=ray.intersectObjects(crs.children,true).find(x=>x.object.userData.cidx!==undefined&&x.object.visible&&x.object.parent.visible);
+      const idx=hit?hit.object.userData.cidx:null;if(idx!==st.hv){st.hv=idx;hl(idx)}
+      cb.current.onHover(hit?{idx,x:ev.clientX-b.left,y:ev.clientY-b.top}:null)});
+    cv.addEventListener('pointerleave',()=>{st.hv=null;hl(null);cb.current.onHover(null)});
+    const ro=new ResizeObserver(()=>{const w=el.clientWidth,hh=el.clientHeight;R.setSize(w,hh);cam.aspect=w/hh;cam.updateProjectionMatrix()});ro.observe(el);
+    st.build(null);
+    return()=>{cancelAnimationFrame(st.raf);ro.disconnect();mq.removeEventListener('change',theme);R.dispose();el.innerHTML=''}
+  },[]);
+  useEffect(()=>{A.current.build&&A.current.build(job)},[job]);
+  return h('div',{className:'vpw',ref:host});
+}
+
+const Gt=({g,c})=>h('span',{className:'gt'},[...g].map((ch,i)=>h('b',{key:i,style:{color:c[ch]}},ch)));
+const Spool=({g,c})=>h('span',{className:'spool'},[...g].map((ch,i)=>h('i',{key:i,style:{background:c[ch]}})));
+const sortG=(x,y)=>x===y?x+y:'Aa';
+
+function App(){
+  const[pa,setPa]=useState('Aa'),[pb,setPb]=useState('Aa'),[mode,setMode]=useState('incomplete'),[batch,setBatch]=useState(1),
+    [cA,setCA]=useState('#ff3b6b'),[ca,setCa]=useState('#35c9ff'),[job,setJob]=useState(null),[layer,setLayer]=useState(0),
+    [busy,setBusy]=useState(false),[hov,setHov]=useState(null),[speed,setSpeed]=useState(3),[modal,setModal]=useState(null),ta=useRef();
+  const cols={A:cA,a:ca},jc=job?job.colors:cols;
+  const start=j=>{setJob(j);setLayer(0);setBusy(true);setHov(null)};
+  const print=()=>{const off=[...Array(batch)].map(()=>{const x=pa[Math.random()<.5?0:1],y=pb[Math.random()<.5?0:1];return{g:sortG(x,y),gametes:[x,y]}});
+    start({app:'Gene Forge',version:1,created:new Date().toISOString(),mode,colors:{A:cA,a:ca},parents:{slotA:pa,slotB:pb},layers:NL,offspring:off})};
+  const load=()=>{try{const j=JSON.parse(modal.text),ok=/^#[0-9a-f]{6}$/i;
+    if(!MODES.includes(j.mode)||!Array.isArray(j.offspring)||!j.offspring.length||j.offspring.length>16||!j.offspring.every(o=>['AA','Aa','aa'].includes(o.g))||!ok.test(j.colors.A)||!ok.test(j.colors.a)||!j.parents.slotA||!j.parents.slotB)throw 0;
+    setPa(j.parents.slotA);setPb(j.parents.slotB);setMode(j.mode);setCA(j.colors.A);setCa(j.colors.a);start(j);setModal(null)}catch(e){setModal({...modal,err:'That isn’t a valid Gene Forge job.'})}};
+  const seg=(opts,val,set,lab)=>h('div',{className:'seg'},opts.map(o=>h('button',{key:o,className:o===val?'on':'',onClick:()=>set(o)},lab(o))));
+  const slot=(title,v,set)=>h('div',null,h('h3',null,title),seg(['AA','Aa','aa'],v,set,g=>[h(Spool,{key:1,g,c:cols}),g]));
+  const sel=hov?hov.idx:0,so=job&&job.offspring[sel];
+  const counts=job&&['AA','Aa','aa'].map(g=>[g,job.offspring.filter(o=>o.g===g).length]);
+  const log=job?Array.from({length:Math.min(layer+1,NL)},(_,j)=>j).slice(-6).map(j=>'G1 Z'+((j+1)*LH).toFixed(2)+' F1800 ; L'+(j+1)+' · '+layerInfo(so.g,job.mode,j,jc).tag):[];
+  return h('div',{className:'app'},
+    h('div',{className:'hd'},h('a',{href:'/',style:{color:'inherit',textDecoration:'none',fontSize:12,marginRight:8}},'← Ibex.tech'),h('span',{className:'logo'},'GENE FORGE'),h('span',{className:'mu'},'Bio-printer v1 · 0.06 mm layers'),
+      h('div',{className:'prog'},h('i',{style:{width:(job?Math.min(100,layer/NL*100):0)+'%'}})),
+      h('span',null,busy?'Printing layer '+Math.min(layer+1,NL)+'/'+NL:job?'Done':'Idle')),
+    h('div',{className:'side'},
+      slot('Slot A · Parent 1 filament',pa,setPa),slot('Slot B · Parent 2 filament',pb,setPb),
+      h('button',{onClick:()=>{setPa('Aa');setPb('Aa')}},'F1 × F1  (Aa × Aa)'),
+      h('div',null,h('h3',null,'Dominance pattern'),seg(MODES,mode,setMode,o=>MN[o])),
+      h('div',null,h('h3',null,'Print mode'),seg([1,9,16],batch,setBatch,o=>o===1?'Single':'Batch '+o)),
+      h('div',null,h('h3',null,'Allele filaments'),
+        h('div',{className:'row'},h('span',null,'Allele A'),h('input',{type:'color',value:cA,onChange:e=>setCA(e.target.value)})),
+        h('div',{className:'row',style:{marginTop:6}},h('span',null,'Allele a'),h('input',{type:'color',value:ca,onChange:e=>setCa(e.target.value)}))),
+      h('div',null,h('h3',null,'Speed'),seg([1.5,3,8],speed,setSpeed,o=>o===1.5?'Slow':o===3?'Normal':'Fast')),
+      h('button',{className:'big',disabled:busy,onClick:print},busy?'PRINTING…':'▶ PRINT'),
+      h('div',{className:'seg'},h('button',{disabled:!job,onClick:()=>setModal({text:JSON.stringify(job,null,2)})},'Save / share job'),
+        h('button',{onClick:()=>setModal({text:''})},'Load job'))),
+    h('div',{className:'vc'},
+        h(Viewport,{job,speed,onLayer:setLayer,onHover:setHov,onDone:()=>setBusy(false)}),
+        hov&&job&&h('div',{className:'tip',style:{left:Math.min(hov.x+14,innerWidth-200),top:hov.y+14}},
+          h('div',{className:'mu',style:{fontSize:10,letterSpacing:'.1em'}},'SCAN · CREATURE #'+(hov.idx+1)),
+          h('div',{style:{fontSize:22}},h(Gt,{g:so.g,c:jc})),
+          h('div',null,pheno(so.g,job.mode)),
+          h('div',{className:'mu'},'Slot A gave ',h(Gt,{g:so.gametes[0],c:jc}),' · Slot B gave ',h(Gt,{g:so.gametes[1],c:jc})),
+          h('div',{style:{display:'flex',height:8,marginTop:6,borderRadius:3,overflow:'hidden'}},
+            Array.from({length:NL},(_,j)=>h('i',{key:j,style:{flex:1,background:layerInfo(so.g,job.mode,j,jc).hex}}))))),
+    h('div',{className:'side'},
+      h('div',null,h('h3',null,'Punnett square'),
+        h('table',{className:'pn'},h('tbody',null,
+          h('tr',null,h('th'),[...pa].map((x,i)=>h('th',{key:i},h(Gt,{g:x,c:cols})))),
+          [...pb].map((y,r)=>h('tr',{key:r},h('th',null,h(Gt,{g:y,c:cols})),[...pa].map((x,i)=>h('td',{key:i},h(Spool,{g:sortG(x,y),c:cols}),' ',h(Gt,{g:sortG(x,y),c:cols}))))))),
+      ),
+      h('div',null,h('h3',null,'Slicer layers · '+(job?'creature #'+(sel+1):'no job')),
+        job?h('div',{className:'sl'},Array.from({length:NL},(_,k)=>NL-1-k).map(j=>{const li=layerInfo(so.g,job.mode,j,jc);
+          return h('div',{key:j,style:{opacity:busy&&j>layer?.2:1}},h('span',null,'L'+(j+1)),h('i',{style:{background:li.hex}}),h('span',null,li.tag))}))
+        :h('div',{className:'mu'},'Pick filaments and press Print.')),
+      h('div',null,h('h3',null,'G-code'),h('div',{className:'log'},log.length?log.map((l,i)=>h('div',{key:i},l)):'; waiting for job'))),
+    h('div',{className:'ft'},
+      h('span',null,counts?['Offspring:'].concat(counts.map(([g,n])=>h('span',{key:g,style:{marginLeft:10}},h(Gt,{g,c:jc}),' × '+n))):'Ready'),
+      h('span',{className:'mu'},'Drag to orbit · scroll to zoom · hover a creature to scan')),
+    modal&&h('div',{className:'modal',onClick:e=>e.target===e.currentTarget&&setModal(null)},h('div',null,
+      h('h3',null,'Print job (JSON)'),
+      h('textarea',{ref:ta,value:modal.text,spellCheck:false,onChange:e=>setModal({text:e.target.value})}),
+      modal.err&&h('div',{style:{color:'#e5484d'}},modal.err),
+      h('div',{className:'seg'},
+        h('button',{onClick:()=>{ta.current.select();try{navigator.clipboard.writeText(modal.text)}catch(e){document.execCommand('copy')}}},'Copy'),
+        h('button',{className:'on',onClick:load},'Load & print'),h('button',{onClick:()=>setModal(null)},'Close')))));
+}
+ReactDOM.createRoot(document.getElementById('root')).render(h(App));
+</script></body></html>
