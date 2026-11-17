@@ -11,53 +11,20 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/studio.css" />
   <style>
-    .soon {
-      min-height: 70vh;
-      display: grid;
-      place-items: center;
-      text-align: center;
-      padding: 48px 20px;
-    }
-    .soon-card {
-      max-width: 420px;
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      padding: 36px 28px;
-    }
-    .soon-card .badge {
-      display: inline-block;
-      font-size: 11px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--cyan);
-      border: 1px solid rgba(46,230,214,.35);
-      padding: 6px 12px;
-      border-radius: 999px;
-      margin-bottom: 16px;
-    }
-    .soon-card h1 {
-      font-size: 1.8rem;
-      letter-spacing: -0.03em;
-      margin-bottom: 10px;
-    }
-    .soon-card p {
-      color: var(--muted);
-      margin-bottom: 22px;
-    }
-    .soon-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-    }
+    .soon { min-height: 70vh; display: grid; place-items: center; text-align: center; padding: 48px 20px; }
+    .soon-card { max-width: 420px; background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 36px 28px; }
+    .soon-card .badge { display: inline-block; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cyan); border: 1px solid rgba(46,230,214,.35); padding: 6px 12px; border-radius: 999px; margin-bottom: 16px; }
+    .soon-card h1 { font-size: 1.8rem; letter-spacing: -0.03em; margin-bottom: 10px; }
+    .soon-card p { color: var(--muted); margin-bottom: 22px; }
+    .soon-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+    .logo-img { width: 40px; height: 40px; border-radius: 12px; object-fit: contain; background: #0a1210; }
   </style>
 </head>
 <body>
   <header class="top">
     <div class="wrap top-inner">
       <a class="logo" href="/">
-        <img class="logo-img" src="/logo.webp" width="40" height="40" alt="" onerror="this.src='/logo.svg'" />
+        <img class="logo-img" src="/logo.webp" width="40" height="40" alt="Ibex.tech" onerror="this.onerror=null;this.src='/logo.svg'" />
         <span>Ibex.tech</span>
       </a>
       <nav class="nav">
@@ -69,14 +36,12 @@
       <a class="btn btn-ghost" href="/">Back home</a>
     </div>
   </header>
-
   <main class="soon">
     <div class="soon-card">
+      <img src="/logo.webp" width="120" height="120" alt="" style="margin:0 auto 16px;border-radius:16px;object-fit:contain" onerror="this.onerror=null;this.src='/logo.svg'" />
       <div class="badge">Coming soon</div>
       <h1>Nozzle and Beam</h1>
-      <p>
-        The print shop is not open yet. Catalog, cart, and Stripe checkout will land here when we’re ready to take orders.
-      </p>
+      <p>The print shop is not open yet. Catalog, cart, and Stripe checkout will land here when we’re ready to take orders.</p>
       <div class="soon-actions">
         <a class="btn btn-primary" href="/">Studio home</a>
         <a class="btn btn-ghost" href="/beetle-scout.html">Beetle Scout</a>
@@ -84,7 +49,6 @@
       </div>
     </div>
   </main>
-
   <footer class="foot">
     <div class="wrap">
       <p class="legal">© 2026 Ibex.tech · Shop coming soon</p>
