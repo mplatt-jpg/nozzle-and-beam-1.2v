@@ -1,163 +1,94 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Nozzle and Beam — by Ibex.tech</title>
-  <meta name="description" content="Custom 3D printed keychains, name signs, fidgets, dice, desk gear and more." />
+  <title>Shop — Coming soon · Ibex.tech</title>
+  <meta name="description" content="Nozzle and Beam shop is coming soon." />
   <link rel="icon" href="/favicon.png" type="image/png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/studio.css" />
+  <style>
+    .soon {
+      min-height: 70vh;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 48px 20px;
+    }
+    .soon-card {
+      max-width: 420px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 36px 28px;
+    }
+    .soon-card .badge {
+      display: inline-block;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      border: 1px solid rgba(46,230,214,.35);
+      padding: 6px 12px;
+      border-radius: 999px;
+      margin-bottom: 16px;
+    }
+    .soon-card h1 {
+      font-size: 1.8rem;
+      letter-spacing: -0.03em;
+      margin-bottom: 10px;
+    }
+    .soon-card p {
+      color: var(--muted);
+      margin-bottom: 22px;
+    }
+    .soon-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+  </style>
 </head>
 <body>
-  <a class="skip" href="#shop">Skip to shop</a>
-  <header class="topbar">
-    <a href="/" class="brand" aria-label="Ibex.tech home">
-      <img src="/logo.webp" width="36" height="36" alt="" style="border-radius:8px" onerror="this.style.display='none'" />
-      <span>Nozzle and Beam</span>
-    </a>
-    <nav class="nav">
-      <a href="/">Studio</a>
-      <a href="#shop">Shop</a>
-      <a href="#custom">Send a file</a>
-      <a href="/beetle-scout.html">Beetle Scout</a>
-      <a href="/gene-forge.html">Gene Forge</a>
-      <a href="#next">Coming soon</a>
-    </nav>
-    <button class="cart-btn" id="cartOpen" aria-label="Open cart">
-      <span>Cart</span>
-      <b id="cartCount">0</b>
-    </button>
+  <header class="top">
+    <div class="wrap top-inner">
+      <a class="logo" href="/">
+        <img class="logo-img" src="/logo.webp" width="40" height="40" alt="" onerror="this.src='/logo.svg'" />
+        <span>Ibex.tech</span>
+      </a>
+      <nav class="nav">
+        <a href="/">Home</a>
+        <a href="/shop.html" class="active">Shop</a>
+        <a href="/beetle-scout.html">Beetle Scout</a>
+        <a href="/gene-forge.html">Gene Forge</a>
+      </nav>
+      <a class="btn btn-ghost" href="/">Back home</a>
+    </div>
   </header>
-  <main>
-    <section class="hero">
-      <div class="hero-copy">
-        <p class="kicker">Small-batch 3D printing · made to order</p>
-        <h1>Tiny things,<br/>printed <span class="hl">your way</span>.</h1>
-        <p class="lede">Keychains, dice, signs, and more. Pick size and color, or send your own file for a quote.</p>
-        <div class="hero-actions">
-          <a href="#shop" class="btn btn-primary">Browse the shop</a>
-          <a href="#custom" class="btn btn-ghost">Upload your own file</a>
-        </div>
+
+  <main class="soon">
+    <div class="soon-card">
+      <div class="badge">Coming soon</div>
+      <h1>Nozzle and Beam</h1>
+      <p>
+        The print shop is not open yet. Catalog, cart, and Stripe checkout will land here when we’re ready to take orders.
+      </p>
+      <div class="soon-actions">
+        <a class="btn btn-primary" href="/">Studio home</a>
+        <a class="btn btn-ghost" href="/beetle-scout.html">Beetle Scout</a>
+        <a class="btn btn-ghost" href="/gene-forge.html">Gene Forge</a>
       </div>
-    </section>
-    <section class="shop" id="shop">
-      <div class="section-head">
-        <h2>The shop</h2>
-        <p>Prices are a range — small &amp; simple at the bottom, large or detailed at the top.</p>
-      </div>
-      <div class="filters" id="filters" role="tablist" aria-label="Filter by category"></div>
-      <ul class="grid" id="grid"></ul>
-    </section>
-    <section class="custom" id="custom">
-      <div class="custom-intro">
-        <p class="kicker">Got an idea or a file?</p>
-        <h2>Send it, and I'll make it.</h2>
-        <p>Upload an STL, 3MF, STEP, SVG, DXF, sketch or photo. You'll get a quote by email before anything is printed.</p>
-      </div>
-      <form class="card form" id="requestForm" novalidate>
-        <div class="row2">
-          <label>Your name<input name="name" required autocomplete="name" /></label>
-          <label>Email<input name="email" type="email" required autocomplete="email" /></label>
-        </div>
-        <label>What do you need?
-          <select name="service">
-            <option value="3d-print">A custom 3D print</option>
-            <option value="laser-cut">Laser cutting (coming soon)</option>
-            <option value="app">An app built</option>
-            <option value="other">Something else</option>
-          </select>
-        </label>
-        <label>Describe it<textarea name="description" rows="4" required placeholder="e.g. A replacement knob, about 3 cm, in white."></textarea></label>
-        <div class="row3">
-          <label>Quantity<input name="quantity" type="number" min="1" value="1" /></label>
-          <label>Colors<input name="colors" placeholder="Teal + white" /></label>
-          <label>Budget<input name="budget" placeholder="About $15" /></label>
-        </div>
-        <div class="drop" id="drop" tabindex="0" role="button" aria-label="Upload files">
-          <input type="file" id="fileInput" multiple hidden />
-          <p><strong>Drop files here</strong> or click to choose</p>
-        </div>
-        <ul class="files" id="fileList"></ul>
-        <p class="form-msg" id="requestMsg" role="status"></p>
-        <button class="btn btn-primary" type="submit" id="requestSubmit">Send request</button>
-      </form>
-    </section>
-    <section class="next" id="next">
-      <div class="section-head">
-        <h2>What's on the workbench</h2>
-      </div>
-      <div class="next-grid">
-        <article class="next-card apps">
-          <span class="badge badge-live">Available now</span>
-          <h3>Beetle Scout</h3>
-          <p>Mark mountain pine beetle red-attack crowns in drone photos.</p>
-          <a href="/beetle-scout.html" class="link">Open Beetle Scout →</a>
-        </article>
-        <article class="next-card apps">
-          <span class="badge badge-live">Available now</span>
-          <h3>Gene Forge</h3>
-          <p>Genetics as a virtual bio-printer.</p>
-          <a href="/gene-forge.html" class="link">Open Gene Forge →</a>
-        </article>
-      </div>
-    </section>
+    </div>
   </main>
-  <footer class="footer">
-    <p><strong>Nozzle and Beam</strong> by Ibex.tech</p>
+
+  <footer class="foot">
+    <div class="wrap">
+      <p class="legal">© 2026 Ibex.tech · Shop coming soon</p>
+    </div>
   </footer>
-  <dialog id="productDialog" class="dialog">
-    <form method="dialog" class="dialog-body" id="productForm">
-      <button class="x" value="cancel" aria-label="Close">×</button>
-      <div class="dialog-top">
-        <div class="dialog-icon" id="pdIcon"></div>
-        <div>
-          <h3 id="pdName"></h3>
-          <p id="pdBlurb" class="muted"></p>
-        </div>
-      </div>
-      <fieldset>
-        <legend>Size</legend>
-        <div class="sizes" id="pdSizes"></div>
-      </fieldset>
-      <fieldset>
-        <legend>Color <span id="pdColorName" class="muted"></span></legend>
-        <div class="swatches" id="pdColors"></div>
-      </fieldset>
-      <label id="pdPersonalWrap">Name / text to print <span class="muted">(optional)</span>
-        <input id="pdPersonal" maxlength="80" placeholder="e.g. The Okafors" />
-      </label>
-      <div class="dialog-foot">
-        <label class="qty">Qty<input id="pdQty" type="number" min="1" max="25" value="1" /></label>
-        <button class="btn btn-primary" id="pdAdd" value="add">Add to cart · <span id="pdPrice"></span></button>
-      </div>
-    </form>
-  </dialog>
-  <div class="scrim" id="scrim" hidden></div>
-  <aside class="drawer" id="drawer" aria-label="Shopping cart" aria-hidden="true">
-    <div class="drawer-head">
-      <h3>Your cart</h3>
-      <button class="x" id="cartClose" aria-label="Close cart">×</button>
-    </div>
-    <ul class="cart-items" id="cartItems"></ul>
-    <div class="cart-empty" id="cartEmpty">
-      <p>Nothing on the print bed yet.</p>
-      <a href="#shop" class="link" id="emptyShop">Browse the shop →</a>
-    </div>
-    <form class="checkout" id="checkoutForm" novalidate>
-      <div class="total"><span>Total</span><strong id="cartTotal">$0.00</strong></div>
-      <label>Name<input name="name" required autocomplete="name" /></label>
-      <label>Email<input name="email" type="email" required autocomplete="email" /></label>
-      <label>Shipping address<textarea name="address" rows="3" required autocomplete="street-address"></textarea></label>
-      <label>Notes <span class="muted">(optional)</span><textarea name="notes" rows="2"></textarea></label>
-      <p class="form-msg" id="checkoutMsg" role="status"></p>
-      <button class="btn btn-primary btn-wide" type="submit" id="checkoutBtn">Checkout with Stripe</button>
-      <p class="fine">Secure payments powered by Stripe.</p>
-    </form>
-  </aside>
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <script type="module" src="/js/app.js"></script>
 </body>
 </html>
