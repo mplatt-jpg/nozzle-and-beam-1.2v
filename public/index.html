@@ -5,17 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Ibex.tech — prints, tools, and small software</title>
   <meta name="description" content="Ibex.tech: Beetle Scout, Gene Forge, and Nozzle and Beam (shop coming soon)." />
-  <link rel="icon" href="/favicon.png" type="image/png" />
+  <link rel="icon" href="/logo.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/studio.css" />
+  <style>
+    .logo-img { width: 40px; height: 40px; border-radius: 12px; object-fit: contain; background: #070d0c; }
+    .hero-art img { background: #070d0c; border-radius: 24px; }
+  </style>
 </head>
 <body>
   <header class="top">
     <div class="wrap top-inner">
       <a class="logo" href="/">
-        <img class="logo-img" src="/logo.webp" width="40" height="40" alt="" onerror="this.src='/logo.svg'" />
+        <img class="logo-img" src="/logo.svg" width="40" height="40" alt="Ibex.tech" />
         <span>Ibex.tech</span>
       </a>
       <nav class="nav">
@@ -45,7 +49,7 @@
         </div>
       </div>
       <div class="hero-art" aria-hidden="true">
-        <img src="/logo.webp" alt="" width="280" height="280" style="width:min(280px,100%);height:auto;border-radius:20px" onerror="this.src='/logo.svg'" />
+        <img src="/logo.svg" alt="" width="280" height="280" style="width:min(280px,100%);height:auto" />
       </div>
     </section>
     <section class="wrap" id="products">
@@ -58,15 +62,9 @@
             <p class="product-meta">Shop · coming soon</p>
             <h3>Custom 3D prints, made to order.</h3>
             <p>Keychains, signs, fidgets, dice, desk gear, and toys. Catalog and Stripe checkout will open here when the shop launches.</p>
-            <div class="features">
-              <div class="feature"><div><b>01 — CATALOG</b><span>Ready designs with size and color options.</span></div></div>
-              <div class="feature"><div><b>02 — CHECKOUT</b><span>Stripe-powered cart (when open).</span></div></div>
-              <div class="feature"><div><b>03 — CUSTOM</b><span>Upload a file or idea for a quote.</span></div></div>
-            </div>
           </div>
           <dl class="side">
             <dt>Status</dt><dd>Coming soon</dd>
-            <dt>Payments</dt><dd>Stripe (when open)</dd>
             <a class="btn btn-primary" href="/shop.html">Shop · coming soon</a>
           </dl>
         </article>
@@ -74,16 +72,10 @@
           <div>
             <p class="product-meta">Beetle Scout · free browser tool</p>
             <h3>Mark red-attack crowns in drone stills and video.</h3>
-            <p>Mountain pine beetle detection. Upload photos, tune sensitivity, inspect marked crowns. Runs fully in your browser.</p>
-            <div class="features">
-              <div class="feature"><div><b>01 — DETECT</b><span>Highlights rust / brick canopy patches.</span></div></div>
-              <div class="feature"><div><b>02 — LOCAL</b><span>Nothing is uploaded.</span></div></div>
-              <div class="feature"><div><b>03 — SAMPLE</b><span>Practice stands included.</span></div></div>
-            </div>
+            <p>Mountain pine beetle detection. Runs fully in your browser.</p>
           </div>
           <dl class="side">
             <dt>Status</dt><dd>Available now</dd>
-            <dt>Price</dt><dd>Free</dd>
             <a class="btn btn-primary" href="/beetle-scout.html">Open Beetle Scout</a>
           </dl>
         </article>
@@ -92,15 +84,9 @@
             <p class="product-meta">Gene Forge · free browser tool</p>
             <h3>Print genetics on a virtual bio-printer.</h3>
             <p>Parent genotypes, dominance patterns, and layer-by-layer 3D creatures.</p>
-            <div class="features">
-              <div class="feature"><div><b>01 — PUNNETT</b><span>Live Punnett square.</span></div></div>
-              <div class="feature"><div><b>02 — 3D PRINT</b><span>Orbit, zoom, and scan on hover.</span></div></div>
-              <div class="feature"><div><b>03 — LOCAL</b><span>Save and load jobs as JSON.</span></div></div>
-            </div>
           </div>
           <dl class="side">
             <dt>Status</dt><dd>Available now</dd>
-            <dt>Price</dt><dd>Free</dd>
             <a class="btn btn-primary" href="/gene-forge.html">Open Gene Forge</a>
           </dl>
         </article>
@@ -109,7 +95,6 @@
     <section class="wrap" id="studio">
       <p class="section-label">Studio</p>
       <h2>Independent. Tools you can try today.</h2>
-      <p class="sub">Ibex.tech runs Beetle Scout, Gene Forge, and a print shop that’s still in the works.</p>
       <div class="grid3">
         <div class="card"><h3>Shop</h3><p>Coming soon — Nozzle and Beam prints.</p></div>
         <div class="card"><h3>Beetle Scout</h3><p>Pine beetle crown detection in the browser.</p></div>
@@ -119,16 +104,6 @@
   </main>
   <footer class="foot">
     <div class="wrap">
-      <div class="foot-grid">
-        <div><strong>Ibex.tech</strong>Prints, tools, and small software.</div>
-        <div>
-          <strong>Product links</strong>
-          <a href="/shop.html">Shop (soon)</a><br />
-          <a href="/beetle-scout.html">Beetle Scout</a><br />
-          <a href="/gene-forge.html">Gene Forge</a>
-        </div>
-        <div><strong>Notes</strong>Browser tools stay on your device.</div>
-      </div>
       <p class="legal">© 2026 Ibex.tech</p>
     </div>
   </footer>
