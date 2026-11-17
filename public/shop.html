@@ -4,11 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Shop — Coming soon · Ibex.tech</title>
-  <meta name="description" content="Nozzle and Beam shop is coming soon." />
-  <link rel="icon" href="/favicon.png" type="image/png" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="icon" href="/logo.svg" type="image/svg+xml" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,600;9..40,700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/studio.css" />
   <style>
     .soon { min-height: 70vh; display: grid; place-items: center; text-align: center; padding: 48px 20px; }
@@ -17,14 +14,14 @@
     .soon-card h1 { font-size: 1.8rem; letter-spacing: -0.03em; margin-bottom: 10px; }
     .soon-card p { color: var(--muted); margin-bottom: 22px; }
     .soon-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
-    .logo-img { width: 40px; height: 40px; border-radius: 12px; object-fit: contain; background: #0a1210; }
+    .logo-img { width: 40px; height: 40px; border-radius: 12px; }
   </style>
 </head>
 <body>
   <header class="top">
     <div class="wrap top-inner">
       <a class="logo" href="/">
-        <img class="logo-img" src="/logo.webp" width="40" height="40" alt="Ibex.tech" onerror="this.onerror=null;this.src='/logo.svg'" />
+        <img class="logo-img" src="/logo.svg" width="40" height="40" alt="Ibex.tech" />
         <span>Ibex.tech</span>
       </a>
       <nav class="nav">
@@ -38,7 +35,7 @@
   </header>
   <main class="soon">
     <div class="soon-card">
-      <img src="/logo.webp" width="120" height="120" alt="" style="margin:0 auto 16px;border-radius:16px;object-fit:contain" onerror="this.onerror=null;this.src='/logo.svg'" />
+      <img src="/logo.svg" width="120" height="120" alt="" style="margin:0 auto 16px;border-radius:16px" />
       <div class="badge">Coming soon</div>
       <h1>Nozzle and Beam</h1>
       <p>The print shop is not open yet. Catalog, cart, and Stripe checkout will land here when we’re ready to take orders.</p>
@@ -49,10 +46,6 @@
       </div>
     </div>
   </main>
-  <footer class="foot">
-    <div class="wrap">
-      <p class="legal">© 2026 Ibex.tech · Shop coming soon</p>
-    </div>
-  </footer>
+  <footer class="foot"><div class="wrap"><p class="legal">© 2026 Ibex.tech · Shop coming soon</p></div></footer>
 </body>
 </html>
