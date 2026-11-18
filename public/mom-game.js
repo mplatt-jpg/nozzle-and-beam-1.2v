@@ -1,12 +1,19 @@
-const FREE_CODE="MAYHEM-FREE",KEY="mom_unlocked_v4";
+const FREE_CODE="MAYHEM-FREE",COMPLEX_CODE="IBEX-9F4K-M4YH3M-Q2R8-7XPL4T1NUM-2026",KEY="mom_unlocked_v4",CHOOSE_KEY="mom_choose_v1";
 const $=id=>document.getElementById(id),cv=$('c'),ctx=cv.getContext('2d');
 const R=Math.random,pick=a=>a[R()*a.length|0],clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 function isUnlocked(){try{return sessionStorage.getItem(KEY)==='1'}catch(e){return false}}
-function unlock(){try{sessionStorage.setItem(KEY,'1')}catch(e){}$('pay').classList.add('h');$('ov').classList.remove('h');roll()}
+function canChoose(){try{return sessionStorage.getItem(CHOOSE_KEY)==='1'}catch(e){return false}}
+function setChoose(){try{sessionStorage.setItem(CHOOSE_KEY,'1');sessionStorage.setItem(KEY,'1')}catch(e){}}
+function unlock(){try{sessionStorage.setItem(KEY,'1')}catch(e){}$('pay').classList.add('h');if(canChoose()){showPick()}else{$('ov').classList.remove('h');roll();updatePickBtn()}}
+function showPick(){$('ov').classList.add('h');$('pay').classList.add('h');$('secret').classList.add('h');buildPickGrid();$('pick').classList.remove('h')}
+function updatePickBtn(){const b=$('pickToggle');if(b)b.style.display=canChoose()?'inline-block':'none'}
 $('unlock').onclick=()=>{const v=($('code').value||'').trim().toUpperCase().replace(/\s+/g,'');if(v===FREE_CODE){unlock();return}$('err').textContent='Wrong code. Try again.';};
 $('code').addEventListener('keydown',e=>{if(e.key==='Enter')$('unlock').click()});
-$('paybtn').onclick=()=>{$('err').textContent='Checkout is not live yet. Use the free code for now.';};
-
+$('paybtn').onclick=()=>{$('err').textContent='Checkout is not live yet. Use the free code to play, or the operator key to choose animals.';};
+$('ghost').onclick=()=>{$('secret').classList.remove('h');$('secCode').value='';$('secErr').textContent='';setTimeout(()=>$('secCode').focus(),50)};
+$('secClose').onclick=()=>$('secret').classList.add('h');
+$('secUnlock').onclick=()=>{const v=($('secCode').value||'').trim().toUpperCase().replace(/\s+/g,'');if(v===COMPLEX_CODE){setChoose();$('secret').classList.add('h');showPick();return}$('secErr').textContent='Key rejected.';};
+$('secCode').addEventListener('keydown',e=>{if(e.key==='Enter')$('secUnlock').click()});
 const AN=[
 {e:'🦝',n:'Trash Raccoon',spd:340,s:78,pow:1,sh:'CHITTER!',q:'Fast, sneaky, loves a dumpster.',
  world:{name:'Alley Dump',layouts:['maze','dense','organic'],ground:'#1c1814',road:'#2a241c',line:'#c4a574',curb:'rgba(196,165,116,.25)',park:'#2d4a28',
