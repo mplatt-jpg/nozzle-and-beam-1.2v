@@ -1,1 +1,79 @@
-<PLACEHOLDER>
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Master of Mayhem · Ibex.tech</title>
+<link href="https://fonts.googleapis.com/css2?family=Bowlby+One&family=Nunito:wght@800;900&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0a0c14;--text:#f4f6ff;--hot:#ff3d6a;--sun:#ffe14a;--mint:#2ef0a0;--muted:#9aa3c7;--neon:#5ce1ff}
+html,body{height:100%;margin:0;background:#0a0c14;overflow:hidden;font-family:'Nunito',system-ui,sans-serif;touch-action:none;user-select:none;-webkit-user-select:none;color:var(--text)}
+canvas{position:fixed;inset:0;width:100%;height:100%;display:block}
+.d{font-family:'Bowlby One','Impact',sans-serif}
+#hud{position:fixed;top:calc(env(safe-area-inset-top,0px)+12px);left:14px;right:14px;display:flex;justify-content:space-between;pointer-events:none;color:#fff;text-shadow:0 2px 8px #000,0 0 12px rgba(0,0,0,.6);z-index:5}
+#sc{font-size:clamp(34px,7vw,58px);line-height:1;letter-spacing:1px}
+#cb{font-size:clamp(15px,2.6vw,22px);color:var(--sun);font-weight:900;min-height:26px}
+#r{text-align:right}
+#st{font-size:clamp(22px,4.2vw,34px);color:var(--sun);min-height:36px;letter-spacing:3px}
+#hb{width:clamp(140px,28vw,250px);height:18px;background:rgba(0,0,0,.55);border-radius:10px;overflow:hidden;margin-left:auto;border:2px solid #fff;box-shadow:0 0 12px rgba(46,240,160,.35)}
+#hf{display:block;height:100%;width:100%;background:linear-gradient(90deg,#2ef0a0,#5ce1ff);transition:width .15s}
+#an2{font-size:15px;font-weight:900;margin-top:6px}
+#ov,#pay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(6,8,18,.78);padding:16px;z-index:20;backdrop-filter:blur(6px)}
+#ov.h,#pay.h{display:none}
+.card{background:linear-gradient(160deg,#1e2540,#12182c);color:var(--text);border-radius:24px;padding:28px 30px;max-width:440px;width:100%;text-align:center;box-shadow:0 0 0 3px var(--neon),0 20px 50px rgba(0,0,0,.6);border:1px solid rgba(92,225,255,.25)}
+.card h1{margin:0;font-size:clamp(30px,7.5vw,44px);color:var(--hot);line-height:1.05;text-shadow:0 0 24px rgba(255,61,106,.45)}
+#rl{font-size:100px;line-height:1.1;margin:8px 0 0}
+#an{font-size:24px;margin:0}
+#aq{margin:4px 0 8px;color:var(--muted);font-weight:800;min-height:22px}
+#worldLine{font-size:14px;color:var(--neon);font-weight:900;margin:0 0 12px;min-height:20px}
+#res{font-weight:900;margin:0 0 10px}
+#hint{font-size:13px;color:var(--muted);font-weight:800;margin:12px 0 0;line-height:1.5}
+button{font:inherit;cursor:pointer}
+#go,#unlock,#paybtn{background:var(--hot);color:#fff;border:3px solid #fff;border-radius:14px;padding:12px 24px;font-size:20px;box-shadow:0 0 20px rgba(255,61,106,.4);font-family:'Bowlby One',Impact,sans-serif}
+#go:disabled{opacity:.5;cursor:wait}
+#unlock{background:var(--neon);color:#0a0c14;box-shadow:0 0 20px rgba(92,225,255,.4);margin-top:10px}
+#paybtn{background:#2a3148;margin-top:8px;font-size:16px}
+input#code{width:100%;padding:12px;border-radius:10px;border:2px solid var(--neon);background:#0a0c14;color:#fff;font:800 16px Nunito,sans-serif;text-align:center;letter-spacing:.08em;margin:10px 0;box-sizing:border-box}
+#err{color:var(--hot);font-size:13px;font-weight:800;min-height:18px;margin:4px 0}
+#jz{position:fixed;left:0;bottom:0;width:55%;height:60%;display:none;z-index:6}
+.tb{position:fixed;display:none;width:92px;height:92px;border-radius:50%;border:3px solid #fff;color:#fff;font-size:15px;background:rgba(255,61,106,.85);bottom:calc(env(safe-area-inset-bottom,0px)+28px);z-index:6;font-family:'Bowlby One',Impact,sans-serif;box-shadow:0 0 16px rgba(255,61,106,.5)}
+#bs{right:24px}#bd{right:128px;background:rgba(92,225,255,.85);width:76px;height:76px;box-shadow:0 0 16px rgba(92,225,255,.5)}
+@media (pointer:coarse){#jz,.tb{display:block}#hint .kb{display:none}}
+#knob{position:fixed;width:90px;height:90px;border-radius:50%;border:3px solid rgba(255,255,255,.75);display:none;pointer-events:none;z-index:7}
+#knob i{position:absolute;left:50%;top:50%;width:38px;height:38px;margin:-19px;border-radius:50%;background:rgba(255,255,255,.9)}
+.world-tag{display:inline-block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--neon);border:1px solid rgba(92,225,255,.45);padding:4px 10px;border-radius:999px;margin-bottom:10px}
+a.back{color:var(--muted);font-size:13px;text-decoration:none}
+</style></head><body>
+<canvas id="c" aria-label="Master of Mayhem"></canvas>
+<div id="hud"><div><div id="sc" class="d">0</div><div id="cb"></div></div>
+<div id="r"><div id="st"></div><div id="hb"><i id="hf"></i></div><div id="an2"></div></div></div>
+<div id="jz"></div><div id="knob"><i></i></div>
+<button class="tb d" id="bs">SMASH</button><button class="tb d" id="bd">DASH</button>
+
+<div id="pay">
+<div class="card">
+<p style="margin:0 0 8px"><a class="back" href="/">← Ibex.tech</a></p>
+<div class="world-tag">Animal worlds</div>
+<h1 class="d">Master of Mayhem</h1>
+<p style="color:var(--muted);font-weight:800;margin:12px 0 8px">Unlock to play.</p>
+<p style="font-size:14px;color:var(--muted);margin:0 0 8px">Each animal rolls its own world and street layout.</p>
+<input id="code" type="text" placeholder="ACCESS CODE" autocomplete="off" spellcheck="false">
+<div id="err"></div>
+<button id="unlock" class="d" type="button">Play free with code</button>
+<button id="paybtn" class="d" type="button">Pay $0.99 · coming soon</button>
+</div>
+</div>
+
+<div id="ov" class="h"><div class="card">
+<p style="margin:0 0 8px"><a class="back" href="/">← Ibex.tech</a></p>
+<div class="world-tag">Roll an animal · get its world</div>
+<h1 class="d">Master of Mayhem</h1>
+<div id="rl">❓</div>
+<p id="an" class="d">Rolling…</p>
+<p id="aq"></p>
+<p id="worldLine"></p>
+<p id="res"></p>
+<button id="go" class="d">Cause mayhem</button>
+<p id="hint"><span class="kb">WASD / arrows · Space smash · Shift dash<br></span>Your animal picks the map. Streets, colors, and props change every roll.</p>
+</div></div>
+
+<script src="/mom-game.js"></script>
+</body></html>
