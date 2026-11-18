@@ -74,7 +74,7 @@ a.back{color:var(--muted);font-size:13px;text-decoration:none}
 <div class="card">
 <div class="world-tag">Restricted</div>
 <h1 class="d" style="font-size:28px">Operator access</h1>
-<p style="color:var(--muted);font-size:14px;font-weight:800">Enter the complex key to choose any animal.</p>
+<p style="color:var(--muted);font-size:14px;font-weight:800">Enter a complex key to choose any animal (including Alpine Ibex).</p>
 <input id="secCode" type="text" placeholder="COMPLEX KEY" autocomplete="off" spellcheck="false">
 <div id="secErr"></div>
 <button id="secUnlock" class="d" type="button">Unlock animal select</button>
@@ -85,7 +85,7 @@ a.back{color:var(--muted);font-size:13px;text-decoration:none}
 <div class="card wide">
 <div class="world-tag">Choose your menace</div>
 <h1 class="d" style="font-size:28px">Pick an animal</h1>
-<p style="color:var(--muted);font-size:13px;font-weight:800;margin:8px 0">Unlocked by pay or operator key.</p>
+<p style="color:var(--muted);font-size:13px;font-weight:800;margin:8px 0">Unlocked by operator key. Alpine Ibex: fly · 1-hit · mines (E) · slow smash.</p>
 <div id="grid"></div>
 <button id="pickGo" class="d" type="button" disabled>Play as selected</button>
 <button type="button" id="pickRoll" style="margin-top:8px;background:transparent;border:none;color:var(--neon);font-weight:900">Or random roll instead</button>
@@ -102,9 +102,10 @@ a.back{color:var(--muted);font-size:13px;text-decoration:none}
 <p id="res"></p>
 <button id="go" class="d">Cause mayhem</button>
 <button id="pickToggle" class="d" type="button">Choose animal instead</button>
-<p id="hint"><span class="kb">WASD / arrows · Space smash · Shift dash<br></span>Your animal picks the map. Streets, colors, and props change every roll.</p>
+<p id="hint"><span class="kb">WASD / arrows · Space smash · Shift dash · E mine (Ibex)<br></span>Your animal picks the map. Streets change every run.</p>
 </div></div>
 <script src="/mom-game.js"></script>
 <script src="/mom-game2.js"></script>
 <script src="/mom-pick.js"></script>
+<script src="/mom-ibex.js"></script>
 </body></html>
