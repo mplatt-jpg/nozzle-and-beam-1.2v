@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Snow Boys Shoveling – Sign-Up Form</title>
+<link rel="icon" href="/UPLOAD_THIS_LOGO/logo.webp" type="image/webp"/>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#f4f9fd;--card:#fff;--text:#1d2b3a;--muted:#5b6b7a;--navy:#12355b;--blue:#2e86c1;--ice:#e8f4fc;--line:#b9d3e6}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#0f1b27;--card:#172636;--text:#e6eef6;--muted:#9fb2c4;--navy:#cfe6f8;--blue:#5dade2;--ice:#1d3347;--line:#34506a}}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*:before,*:after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.45 Arial,Helvetica,sans-serif}
+header{background:#12355b;color:#fff;padding:22px 20px}
+header h1{margin:0;font-size:26px}header p{margin:4px 0 0;opacity:.85}
+header a{color:#9fd3ff;font-size:14px}
+main{max-width:640px;margin:0 auto;padding:18px 16px 40px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:14px}
+label.t,.t{display:block;font-weight:bold;color:var(--navy);margin-bottom:6px}
+input[type=text],input[type=password],textarea{width:100%;padding:10px;border:1px solid var(--blue);border-radius:6px;background:var(--ice);color:var(--text);font:inherit}
+textarea{min-height:80px;resize:vertical}
+.row{display:flex;gap:12px;flex-wrap:wrap}.row>div{flex:1 1 180px}
+.opt{display:flex;gap:10px;align-items:flex-start;padding:10px;border:1px solid var(--line);border-radius:8px;margin-bottom:8px;background:var(--ice);cursor:pointer}
+.opt input{margin-top:4px;width:18px;height:18px}
+.opt b{color:var(--navy)}.opt small{display:block;color:var(--muted)}
+.chk{display:inline-flex;gap:8px;align-items:center;margin:4px 16px 4px 0}
+button,a.btn{display:inline-block;background:var(--blue);color:#fff;border:0;border-radius:8px;padding:12px 18px;font:bold 16px Arial,sans-serif;cursor:pointer;text-decoration:none;margin:4px 8px 4px 0}
+button.alt{background:transparent;color:var(--blue);border:2px solid var(--blue)}
+#out{display:none;font-family:Arial,sans-serif}
+.note{color:var(--muted);font-size:14px}
+#gate{max-width:400px;margin:40px auto;padding:24px}
+#gate .err{color:#c0392b;font-size:14px;margin-top:8px;display:none}
+#app{display:none}
+</style></head><body>
+<header>
+  <p style="margin:0 0 8px"><a href="/">← Ibex.tech</a></p>
+  <h1>Snow Boys Shoveling</h1>
+  <p>Sign-Up Form · by Mathias Platt</p>
+</header>
+
+<div id="gate" class="card">
+  <label class="t" for="pw">Password required</label>
+  <p class="note" style="margin:0 0 12px">This form is locked. Enter the password to continue.</p>
+  <input type="password" id="pw" autocomplete="current-password" placeholder="Password">
+  <div style="margin-top:12px"><button type="button" id="unlock">Unlock form</button></div>
+  <p class="err" id="err">Wrong password. Try again.</p>
+</div>
+
+<main id="app">
+<div class="card"><label class="t" for="name">Name</label><input type="text" id="name" autocomplete="name">
+<div class="row" style="margin-top:12px"><div><label class="t" for="unit">Unit #</label><input type="text" id="unit"></div>
+<div><label class="t" for="contact">Phone or email</label><input type="text" id="contact" autocomplete="email"></div></div></div>
+
+<div class="card"><span class="t">Which plan would you like?</span>
+<label class="opt"><input type="radio" name="plan" value="Pay As You Go ($1.00 each time)"><span><b>Pay As You Go · $1.00 each time</b><small>Big Snow only (1.5” or more)</small></span></label>
+<label class="opt"><input type="radio" name="plan" value="Monthly ($10.00 per month)"><span><b>Monthly · $10.00 per month</b><small>Every snow, done 7–9am</small></span></label>
+<label class="opt"><input type="radio" name="plan" value="VIP ($20.00 per month)"><span><b>VIP · $20.00 per month</b><small>Every snow, every day, done 7–8am</small></span></label></div>
+
+<div class="card"><label class="t" for="car">What should I do if there’s a car in the driveway?</label><textarea id="car"></textarea></div>
+<div class="card"><label class="t" for="away">Dates you’ll be out of town</label><textarea id="away"></textarea></div>
+<div class="card"><span class="t">Other services you’d like</span>
+<label class="chk"><input type="checkbox" class="svc" value="Water plants">Water plants</label>
+<label class="chk"><input type="checkbox" class="svc" value="Walk dogs">Walk dogs</label>
+<label class="chk"><input type="checkbox" class="svc" value="Take out trash">Take out trash</label>
+<label class="chk"><input type="checkbox" class="svc" value="Blow leaves">Blow leaves</label></div>
+<div class="card"><label class="t" for="notes">Notes</label><textarea id="notes"></textarea></div>
+
+<button id="go" type="button">Make my sign-up message</button>
+<div class="card" id="out" style="margin-top:12px">
+<span class="t">Your message is ready. Copy it and send it to Mathias.</span>
+<textarea id="msg" readonly style="min-height:200px"></textarea>
+<div style="margin-top:8px"><button id="copy" type="button">Copy message</button><span id="done" class="note"></span></div>
+<div id="send"></div></div>
+<p class="note">Payment is due at the end of each month. I’ll send an invoice with the dates I shoveled.</p>
+</main>
+<script>
+var CONTACT_EMAIL = "";
+var CONTACT_PHONE = "";
+var PW = "SnowBoys2026";
+var KEY = "snowboys_unlocked";
+function unlock(){
+  document.getElementById("gate").style.display = "none";
+  document.getElementById("app").style.display = "block";
+  try { sessionStorage.setItem(KEY, "1"); } catch(e) {}
+}
+function tryUnlock(){
+  var v = (document.getElementById("pw").value || "").trim();
+  if (v === PW) { unlock(); return; }
+  document.getElementById("err").style.display = "block";
+}
+document.getElementById("unlock").addEventListener("click", tryUnlock);
+document.getElementById("pw").addEventListener("keydown", function(e){
+  if (e.key === "Enter") tryUnlock();
+});
+try { if (sessionStorage.getItem(KEY) === "1") unlock(); } catch(e) {}
+
+function v(id){return (document.getElementById(id).value||"").trim();}
+document.getElementById("go").addEventListener("click",function(){
+  var plan=document.querySelector('input[name=plan]:checked');
+  var svc=[].slice.call(document.querySelectorAll(".svc:checked")).map(function(e){return e.value;});
+  var lines=["Snow Boys Shoveling sign-up","",
+    "Name: "+v("name"),"Unit #: "+v("unit"),"Phone or email: "+v("contact"),
+    "Plan: "+(plan?plan.value:"(not chosen)"),
+    "Car in driveway: "+(v("car")||"-"),
+    "Out of town: "+(v("away")||"-"),
+    "Other services: "+(svc.length?svc.join(", "):"none"),
+    "Notes: "+(v("notes")||"-")];
+  var text=lines.join("\n");
+  document.getElementById("msg").value=text;
+  document.getElementById("out").style.display="block";
+  var s=document.getElementById("send"); s.innerHTML="";
+  if(CONTACT_EMAIL){var a=document.createElement("a");a.className="btn alt";a.textContent="Email Mathias";a.href="mailto:"+CONTACT_EMAIL+"?subject="+encodeURIComponent("Snow shoveling sign-up")+"&body="+encodeURIComponent(text);s.appendChild(a);}
+  if(CONTACT_PHONE){var b=document.createElement("a");b.className="btn alt";b.textContent="Text Mathias";b.href="sms:"+CONTACT_PHONE+"?&body="+encodeURIComponent(text);s.appendChild(b);}
+  document.getElementById("out").scrollIntoView({behavior:"smooth"});
+});
+document.getElementById("copy").addEventListener("click",function(){
+  var ta=document.getElementById("msg"),d=document.getElementById("done");
+  ta.select();
+  var ok=false;try{ok=document.execCommand("copy");}catch(e){}
+  if(!ok&&navigator.clipboard){navigator.clipboard.writeText(ta.value).then(function(){d.textContent="Copied!";},function(){d.textContent="Press and hold the text to copy it.";});return;}
+  d.textContent=ok?"Copied!":"Press and hold the text to copy it.";
+});
+</script></body></html>
