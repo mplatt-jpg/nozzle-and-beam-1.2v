@@ -1,1 +1,218 @@
-PLACEHOLDER
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<title>Glow Sheet · BioGlow Founders Edition</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#08110d; --raised:#102018; --surface:#15281e; --line:#2c4a3a;
+  --fg:#e7f6ee; --muted:#93b3a2; --mint:#3ee0a0; --mint-ink:#06281a;
+  --amber:#e8c36a; --amber-ink:#2a2108;
+  --font-display:"Fraunces",Georgia,serif; --font-sans:"Outfit",system-ui,sans-serif;
+  --radius-card:1rem;
+}
+*{box-sizing:border-box}
+html{color-scheme:dark}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--fg);font-family:var(--font-sans);line-height:1.5}
+button:not(:disabled),[role=button],summary{cursor:pointer}
+:focus-visible{outline:2px solid var(--mint);outline-offset:2px}
+a{color:var(--mint);text-decoration:none}
+.min-h-dvh{min-height:100dvh}
+.sticky-top{position:sticky;top:0;z-index:20;border-bottom:1px solid var(--line);background:var(--bg)}
+.mint-line{height:2px;background:var(--mint)}
+.bar-inner{max-width:48rem;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px}
+.total-num{font-family:var(--font-display);font-size:clamp(28px,6vw,36px);font-weight:700;line-height:1;color:var(--mint)}
+.total-sub{font-size:12px;color:var(--muted);font-weight:600}
+.timer-row{display:flex;align-items:center;gap:8px}
+.clock{font-variant-numeric:tabular-nums;font-weight:700;font-size:22px;min-width:3.6ch}
+.icon-btn{width:40px;height:40px;border-radius:10px;border:1px solid var(--line);background:var(--raised);color:var(--fg);display:grid;place-items:center;font-size:16px}
+.icon-btn:hover{border-color:var(--mint)}
+.main{max-width:48rem;margin:0 auto;padding:16px 16px 7rem}
+.team-row{display:flex;gap:10px;align-items:center;margin-bottom:14px}
+.team-row input{flex:1;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--raised);color:var(--fg);padding:0 14px;font:600 15px var(--font-sans)}
+.save-pill{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.save-pill.ok{color:var(--mint)}
+.save-pill.err{color:#ff7b7b}
+.card{border:1px solid var(--line);background:var(--surface);border-radius:var(--radius-card);padding:14px}
+.card + .card, .section + .section{margin-top:14px}
+.card h2,.section-title{margin:0 0 10px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.token-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.token-grid button{min-height:52px;border-radius:12px;border:1px solid var(--line);background:var(--raised);color:var(--fg);padding:6px 2px}
+.token-grid button.on{background:var(--mint);color:var(--mint-ink);border-color:transparent}
+.token-grid .n{display:block;font-weight:700;font-size:15px}
+.token-grid .p{display:block;font-size:11px;opacity:.8;margin-top:2px}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 4px;border-top:1px solid rgba(44,74,58,.55)}
+.toggle-row:first-child{border-top:none}
+.toggle-row label{font-size:14px;font-weight:600;line-height:1.35}
+.toggle-row .pts{font-size:12px;color:var(--muted);font-weight:600}
+.switch{width:48px;height:28px;border-radius:999px;background:var(--raised);border:1px solid var(--line);position:relative;flex-shrink:0}
+.switch.on{background:var(--mint);border-color:transparent}
+.switch i{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .15s}
+.switch.on i{transform:translateX(20px)}
+.switch:disabled{opacity:.4}
+.stepper{display:flex;align-items:center;gap:8px}
+.stepper button{width:36px;height:36px;border-radius:10px;border:1px solid var(--line);background:var(--raised);color:var(--fg);font-size:18px}
+.stepper span{min-width:1.5rem;text-align:center;font-weight:700;font-variant-numeric:tabular-nums}
+.choice{display:flex;flex-wrap:wrap;gap:6px}
+.choice button{min-height:40px;padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:var(--raised);color:var(--fg);font-weight:600;font-size:13px}
+.choice button.on{background:var(--mint);color:var(--mint-ink);border-color:transparent}
+.filters{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:14px 0}
+.filters button{min-height:44px;border-radius:12px;border:none;background:var(--surface);color:var(--fg);font-weight:600;font-size:14px}
+.filters button.on{background:var(--mint);color:var(--mint-ink)}
+.mission-grid{display:grid;gap:12px}
+@media(min-width:720px){.mission-grid{grid-template-columns:1fr 1fr}}
+.mission{border:1px solid var(--line);background:var(--surface);border-radius:var(--radius-card);padding:12px}
+.mission header{display:flex;justify-content:space-between;gap:10px;align-items:baseline;margin-bottom:4px;padding:0 2px}
+.mission .num{color:var(--mint);font-weight:700;margin-right:6px}
+.mission .name{font-weight:600;font-size:15px}
+.mission .score{font-weight:700;font-variant-numeric:tabular-nums;font-size:14px}
+.mission .score .amber{color:var(--amber)}
+.mission .score .muted{color:var(--muted)}
+.mission .max-tag{margin-left:6px;font-size:11px;color:var(--mint);font-weight:700}
+.hint{font-size:12px;color:var(--amber);padding:0 8px}
+.dock-row{display:flex;flex-wrap:wrap;gap:6px}
+.bottom-nav{position:fixed;inset-inline:0;bottom:0;z-index:20;border-top:1px solid var(--line);background:var(--raised)}
+.bottom-nav .grid{max-width:48rem;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr)}
+.bottom-nav button{min-height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:transparent;border:none;color:var(--muted);font-size:12px;font-weight:600;padding-bottom:env(safe-area-inset-bottom,0)}
+.bottom-nav button.on{color:var(--mint)}
+.bottom-nav svg{width:20px;height:20px}
+.runs-list{display:flex;flex-direction:column;gap:10px}
+.run{border:1px solid var(--line);background:var(--surface);border-radius:var(--radius-card);padding:14px;display:flex;justify-content:space-between;gap:12px;align-items:center}
+.run .pts{font-family:var(--font-display);font-size:28px;color:var(--mint);font-weight:700}
+.run .meta{font-size:13px;color:var(--muted)}
+.run-actions{display:flex;gap:6px}
+.btn{min-height:40px;padding:8px 14px;border-radius:12px;border:1px solid var(--line);background:var(--raised);color:var(--fg);font-weight:600;font-size:13px}
+.btn.mint{background:var(--mint);color:var(--mint-ink);border-color:transparent}
+.btn.ghost{background:transparent}
+.guide article{border:1px solid var(--line);background:var(--surface);border-radius:var(--radius-card);padding:14px;margin-bottom:12px}
+.guide .title{font-weight:700;font-size:16px}
+.guide .summary{font-size:14px;color:var(--muted);margin:8px 0}
+.guide ul{margin:0;padding-left:18px;font-size:14px}
+.guide .note{margin-top:10px}
+.guide .note input{width:100%;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--raised);color:var(--fg);padding:0 12px;font:500 14px var(--font-sans)}
+.check-btn{margin-top:12px;width:100%;min-height:44px;display:flex;align-items:center;gap:12px;border-radius:12px;border:none;padding:0 12px;font-weight:600;font-size:14px;background:var(--raised);color:var(--fg);text-align:left}
+.check-btn.on{background:var(--mint);color:var(--mint-ink)}
+.check-box{width:24px;height:24px;border-radius:8px;border:1px solid var(--line);display:grid;place-items:center;flex-shrink:0}
+.check-btn.on .check-box{background:var(--mint-ink);color:var(--mint);border:none}
+.details{margin-top:12px;border:1px solid var(--line);border-radius:var(--radius-card);padding:12px 14px;background:var(--surface)}
+.details summary{font-weight:600;font-size:13px;color:var(--muted)}
+.details ul{margin:8px 0 0;padding-left:18px;font-size:13px;color:var(--muted)}
+.foot-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.back{font-size:13px;color:var(--muted);font-weight:600}
+.empty{font-size:14px;color:var(--muted);padding:20px 0;text-align:center}
+.pct-bar{height:4px;background:var(--raised);border-radius:999px;overflow:hidden;margin-top:6px;max-width:140px}
+.pct-bar i{display:block;height:100%;background:var(--mint)}
+</style>
+</head>
+<body>
+<div class="min-h-dvh">
+  <header class="sticky-top">
+    <div class="mint-line"></div>
+    <div class="bar-inner">
+      <div>
+        <div class="total-num" id="totalPts">0</div>
+        <div class="total-sub"><span id="pct">0</span>% of season max · <span id="breakout">0 · 0 · 0</span></div>
+        <div class="pct-bar"><i id="pctBar" style="width:0%"></i></div>
+      </div>
+      <div class="timer-row">
+        <span class="clock" id="clock">2:30</span>
+        <button type="button" class="icon-btn" id="btnPlay" aria-label="Start or pause">▶</button>
+        <button type="button" class="icon-btn" id="btnReset" aria-label="Reset timer">↺</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+    <p style="margin:0 0 10px"><a class="back" href="/">← Ibex.tech</a></p>
+    <p style="margin:0;font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--muted)">BIOGLOW FOUNDERS EDITION</p>
+    <h1 style="font-family:var(--font-display);font-size:clamp(28px,6vw,40px);margin:4px 0 4px;font-weight:700">Glow Sheet</h1>
+    <p style="margin:0 0 16px;color:var(--muted);font-size:14px">Practice scoring for the 2026–27 robot game. Season max 530.</p>
+
+    <div id="tab-score">
+      <div class="team-row">
+        <input type="text" id="teamName" placeholder="Team name" maxlength="40"/>
+        <span class="save-pill" id="saveStatus">local</span>
+      </div>
+
+      <div class="card">
+        <h2>Precision tokens</h2>
+        <p style="margin:0 0 10px;font-size:13px;color:var(--muted)">Tokens left in the launch area. 5 and 6 both score 50.</p>
+        <div class="token-grid" id="tokenGrid"></div>
+      </div>
+
+      <div class="card" style="margin-top:14px">
+        <div class="toggle-row" style="border:none;padding:0">
+          <div>
+            <label>Everything fits in one launch area, under 12 in</label>
+            <div class="pts">Inspection · 20</div>
+          </div>
+          <button type="button" class="switch" id="oneLaunch" aria-pressed="false"><i></i></button>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:14px">
+        <h2>Restoration dock</h2>
+        <div class="dock-row" id="dockRow"></div>
+        <p style="margin:10px 0 0;font-size:13px;color:var(--muted)">Dock bonus on mission 15 matches this dock’s greatest need.</p>
+      </div>
+
+      <div class="filters" id="filters">
+        <button type="button" class="on" data-f="all">All 15</button>
+        <button type="button" data-f="open">Still open</button>
+        <button type="button" data-f="scored">Scoring</button>
+      </div>
+
+      <div id="missionHost"></div>
+
+      <details class="details">
+        <summary>Scoring reminders</summary>
+        <ul>
+          <li>Official matches are 2:30. Only the best score counts.</li>
+          <li>A mission model touching your equipment at the end does not score.</li>
+          <li>Mission 07’s connection bonus needs an opposing team. Remote matches cannot earn it.</li>
+          <li>Missions 13–15 each sit on a dock you choose at inspection.</li>
+        </ul>
+      </details>
+
+      <div class="foot-actions">
+        <button type="button" class="btn mint" id="saveRun">Save this run</button>
+        <button type="button" class="btn" id="resetDraft">Reset score</button>
+      </div>
+    </div>
+
+    <div id="tab-runs" hidden>
+      <h2 class="section-title">Saved runs</h2>
+      <div class="runs-list" id="runsList"></div>
+      <p class="empty" id="runsEmpty">No runs saved yet. Score a match, then save it.</p>
+    </div>
+
+    <div id="tab-missions" hidden>
+      <div class="guide" id="missionGuide"></div>
+      <p style="font-size:12px;color:var(--muted);margin-top:8px">Point values follow the BIOGLOW Founders Edition robot game. If a challenge update changes a mission, trust your head referee over this sheet.</p>
+    </div>
+  </main>
+
+  <nav class="bottom-nav" aria-label="Sections">
+    <div class="grid">
+      <button type="button" class="on" data-tab="score">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h6"/></svg>
+        Score
+      </button>
+      <button type="button" data-tab="runs">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9"/><path d="M3 3v5h5"/><path d="M12 7v5l3 3"/></svg>
+        Runs
+      </button>
+      <button type="button" data-tab="missions">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+        Missions
+      </button>
+    </div>
+  </nav>
+</div>
+
+<script src="/glow-sheet-app.js"></script>
+</body>
+</html>
