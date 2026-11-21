@@ -1,1 +1,111 @@
-PLACEHOLDER
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Button Maker</title>
+<script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+<style>
+:root{--bg:#f4f6f8;--card:#fff;--tx:#1b2430;--mu:#5d6b7a;--ac:#0a7d5a;--bd:#d5dce3;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12171d;--card:#1b232c;--tx:#e8edf2;--mu:#98a6b4;--ac:#2fc68f;--bd:#34404c}}
+:root[data-theme="dark"]{--bg:#12171d;--card:#1b232c;--tx:#e8edf2;--mu:#98a6b4;--ac:#2fc68f;--bd:#34404c}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.4 system-ui,-apple-system,Segoe UI,sans-serif}
+header{padding:16px 20px 0}h1{margin:0;font-size:22px}header p{margin:4px 0 0;color:var(--mu)}
+main{display:grid;grid-template-columns:minmax(290px,360px) 1fr;gap:16px;padding:16px 20px}
+@media(max-width:800px){main{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px;margin-bottom:12px}
+.card h2{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--mu);margin:0 0 10px}
+label{display:block;margin:10px 0 4px;font-size:13px;color:var(--mu)}
+input[type=file],input[type=text],textarea,select,input[type=number]{width:100%;padding:7px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);font:inherit}
+input[type=range]{width:100%}input[type=color]{width:100%;height:34px;border:1px solid var(--bd);border-radius:8px;background:none}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+button{background:var(--ac);color:#fff;border:0;border-radius:10px;padding:12px;font-size:16px;font-weight:600;width:100%;margin-top:12px;cursor:pointer}
+button.s{background:var(--bg);color:var(--tx);border:1px solid var(--bd);font-size:13px;padding:7px 10px;margin:4px 4px 0 0;width:auto}
+button.s.on{outline:2px solid var(--ac)}
+.chk{display:flex;gap:6px;align-items:center;margin-top:10px;font-size:13px;color:var(--mu)}.chk input{width:auto}
+#pv{display:block;margin:0 auto;width:240px;height:240px;border-radius:50%;touch-action:none;cursor:grab;background:repeating-conic-gradient(#8883 0 25%,transparent 0 50%) 0 0/16px 16px}
+.hint{font-size:12px;color:var(--mu);margin:6px 0 0}
+#sheet{position:relative;width:100%;aspect-ratio:11/8.5;background:#fff;border:1px solid var(--bd);box-shadow:0 2px 10px #0003;overflow:hidden}
+#sheet img{position:absolute;border-radius:50%}
+.g img{outline:1px solid #999;outline-offset:-1px}
+#info{margin:8px 0 0;color:var(--mu);font-size:13px}
+@page{size:11in 8.5in;margin:0}
+@media print{body{background:#fff}header,.ctl,#info,.nop{display:none!important}main{display:block;padding:0}
+.card.sc{border:0;padding:0;margin:0;background:none}#sheet{width:11in;height:8.5in;border:0;box-shadow:none;aspect-ratio:auto}
+#sheet img{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+#gate{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;background:var(--bg);padding:24px}
+#gate.h{display:none}
+#gate .box{max-width:380px;width:100%;background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:24px}
+#gate h1{margin:6px 0;font-size:22px}
+#gate p{color:var(--mu);margin:0 0 12px;font-size:14px}
+#gate input{width:100%;padding:10px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);font:inherit;margin-bottom:8px}
+#gate .err{color:#c0392b;font-size:13px;min-height:18px;margin:0 0 8px}
+#gate button{margin-top:4px}
+#app.h{display:none}
+header a.back{color:var(--mu);font-size:13px;text-decoration:none}
+</style></head><body>
+<div id="gate"><div class="box">
+<p style="margin:0 0 4px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--mu)">Ibex.tech · BioGlow</p>
+<h1>Button Maker</h1>
+<p>Password required to open this page.</p>
+<input type="password" id="pw" autocomplete="current-password" placeholder="Password">
+<p class="err" id="err"></p>
+<button type="button" id="unlock">Unlock</button>
+<p style="margin:12px 0 0;font-size:13px"><a class="back" href="/">← Ibex.tech</a></p>
+</div></div>
+<div id="app" class="h">
+<header><p style="margin:0 0 8px"><a class="back" href="/">← Ibex.tech</a></p><h1>Button Maker</h1><p>Make several different buttons, choose how many of each, and print them all on one 11 × 8.5 sheet.</p></header>
+<main>
+<div class="ctl">
+<div class="card"><h2>Your buttons</h2><div id="chips"></div>
+<label>Add a Bio Glow preset</label><div id="pre"></div>
+<button class="s" id="addb">+ Blank / photo button</button><button class="s" id="dup">Duplicate</button><button class="s" id="del">Delete</button>
+<button class="s" id="fill">Fill page evenly</button></div>
+<div class="card"><h2>Edit selected button</h2>
+<label>Name (just for you)</label><input type="text" data-k="name">
+<label>Copies on the sheet</label><input type="number" data-k="qty" min="0" max="60">
+<label>Background picture (goes behind the logo)</label><input type="file" id="pf" accept="image/*">
+<label>Zoom</label><input type="range" data-k="zm" min="0.5" max="4" step="0.01">
+<label class="chk"><input type="checkbox" data-k="faceOn"> Show round face photo</label>
+<label>Face photo (on a phone this opens the camera)</label><input type="file" id="ff" accept="image/*" capture="user">
+<button class="s" id="cam">Use webcam</button><button class="s" id="snap" style="display:none">Snap!</button>
+<video id="vid" autoplay playsinline muted style="display:none;width:100%;border-radius:8px;margin-top:6px"></video>
+<label>Face size</label><input type="range" data-k="fs" min=".2" max=".9" step=".01">
+<label>Face left / right</label><input type="range" data-k="fxo" min="-.4" max=".4" step=".01">
+<label>Face up / down</label><input type="range" data-k="fyo" min="-.4" max=".4" step=".01">
+<label>Face zoom (crop in tighter)</label><input type="range" data-k="fz" min="1" max="4" step=".01">
+<label>Border image (PNG with see-through middle)</label><input type="file" id="bf" accept="image/*">
+<button class="s" id="nb">Remove all my pictures from this button</button>
+<label>Text (use Enter for 2 lines)</label><textarea data-k="text" rows="2"></textarea>
+<label>Small text</label><input type="text" data-k="text2">
+<div class="row"><div><label>Text position</label><select data-k="tpos"><option value="-1">Top</option><option value="0">Middle</option><option value="1">Bottom</option></select></div>
+<div><label>Text color</label><input type="color" data-k="tc"></div></div>
+<div class="row"><div><label>Background</label><input type="color" data-k="bg"></div><div><label>Background edge</label><input type="color" data-k="bg2"></div></div>
+<label>Border style (if no border image)</label><select data-k="bs"><option value="none">No border (no ring)</option><option value="ring">Plain ring</option><option value="gear">Gear: small teeth</option><option value="cog">Gear: big cog teeth</option><option value="line">Gear + inner line</option><option value="bolts">Gear + bolts</option></select>
+<div class="row"><div><label>Ring color</label><input type="color" data-k="rc"></div><div><label>Ring width</label><input type="range" data-k="rw" min="0" max="0.4" step="0.01"></div></div>
+<label class="chk"><input type="checkbox" data-k="logo"> Show BioGlow logo</label>
+<label class="chk"><input type="checkbox" data-k="teamOn"> Team number plate</label>
+<input type="text" data-k="team" maxlength="10" placeholder="Team number (blank = empty plate)">
+<label class="chk"><input type="checkbox" data-k="curve"> Curve text in a U along the bottom</label>
+<label class="chk"><input type="checkbox" data-k="glow"> Glowing text</label>
+<label class="chk"><input type="checkbox" data-k="dots"> Glowing specks</label>
+</div>
+<div class="card"><h2>Machine &amp; page</h2>
+<label>Finished button size</label>
+<select id="sz"><option value="0.984">25 mm (1 in)</option><option value="1.26">32 mm (1.25 in)</option><option value="1.457">37 mm (1.5 in)</option><option value="1.732">44 mm (1.75 in)</option><option value="1.969">50 mm (2 in)</option><option value="2.283" selected>58 mm (2.25 in)</option><option value="2.953">75 mm (3 in)</option></select>
+<div class="row"><div><label>Extra for wrap (in)</label><input type="number" id="wr" value="0.75" step="0.05" min="0.3" max="1.5"></div>
+<div><label>Gap (in)</label><input type="number" id="gp" value="0.1" step="0.05" min="0" max="1"></div></div>
+<div class="row"><div><label>Page margin (in)</label><input type="number" id="mg" value="0.25" step="0.05" min="0" max="1"></div>
+<div><label>Cut guides</label><select id="gd"><option value="1">On</option><option value="0" selected>Off</option></select></div></div>
+<div class="row"><div><label>Print scale fix (%)</label><input type="number" id="ps" value="100" min="70" max="130" step="0.5"></div><div><label>Test ruler (2 in)</label><select id="rl"><option value="0">Off</option><option value="1">On</option></select></div></div>
+<label>What to print</label><select id="pm"><option value="all">All my buttons (using each one’s copies)</option><option value="one">Only the selected button</option></select>
+<label>How many of the selected button</label><input type="number" id="pn" value="1" min="1" max="60">
+<button id="pr">Print sheet</button>
+<button class="s" id="mk" style="width:100%;margin-top:8px">Can’t print? Make a picture of the sheet</button>
+<p class="hint">Print dialog: Landscape, Letter, Scale 100%, Margins None.</p></div>
+</div>
+<div>
+<div class="card nop"><h2>Preview of selected button (drag a picture to move it)</h2><canvas id="pv" width="480" height="480"></canvas></div>
+<div class="card sc"><h2 class="nop">Print sheet</h2><div id="sheet"></div><p id="info"></p><div class="nop"><p id="outh" class="hint" style="display:none">Right-click (or press and hold) the picture and choose Save Image. Then open the saved picture and print it at Actual Size / 100% (turn OFF “Fit to page”) on Letter paper, landscape.</p><img id="out" alt="Sheet picture" style="display:none;width:100%;border:1px solid var(--bd);margin-top:8px"></div></div>
+</div></main>
+</div>
+<script src="/button-maker-app.js"></script>
+</body></html>
